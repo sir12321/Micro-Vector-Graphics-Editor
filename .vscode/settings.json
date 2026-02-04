@@ -1,0 +1,15 @@
+{
+    "editor.formatOnSave": true,
+    "[cpp]": {
+        "editor.defaultFormatter": "ms-vscode.cpptools"
+    },
+    "C_Cpp.formatting": "clangFormat",
+    "C_Cpp.clang_format_path": "/usr/bin/clang-format",
+    "chat.tools.terminal.autoApprove": {
+        "/^clang-format --version$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    },
+    "C_Cpp.default.compilerPath": "/usr/bin/g++-13"
+}
