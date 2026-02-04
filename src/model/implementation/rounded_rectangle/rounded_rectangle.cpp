@@ -1,12 +1,10 @@
-// Implementation of the RoundedRectangle class.
-
 #include "../../headers/rounded_rectangle.h"
 
 #include <algorithm>
 
 using namespace std;
 
-// Constructor computes initial bounding box and clamps radius.
+// Constructor.
 RoundedRectangle::RoundedRectangle(double cx, double cy, double width,
                                    double height, double radius,
                                    int stroke_width)
@@ -17,7 +15,7 @@ RoundedRectangle::RoundedRectangle(double cx, double cy, double width,
       endx_(cx + width / 2.0),
       endy_(cy + height / 2.0) {
   SetStrokeWidth(stroke_width);
-  // Calculate ratio from initial radius
+  // Calculate ratio.
   double min_dim = std::min(width_, height_);
   if (min_dim > 0) {
     ratio_ = radius / min_dim;
@@ -47,7 +45,7 @@ void RoundedRectangle::Draw(QPainter& painter) const {
                           height_, radius_, radius_);
 }
 
-// Updates geometry properly handling radius recalculation based on proportion.
+// Updates geometry.
 void RoundedRectangle::SetGeometry(double x, double y, double w, double h,
                                    double rounded_rect_radius, double end_x,
                                    double end_y) {
@@ -58,7 +56,7 @@ void RoundedRectangle::SetGeometry(double x, double y, double w, double h,
   endx_ = end_x;
   endy_ = end_y;
 
-  // Update ratio based on tool setting
+  // Update ratio.
   ratio_ = rounded_rect_radius;
   radius_ = std::min(width_, height_) * ratio_;
 
@@ -68,7 +66,7 @@ void RoundedRectangle::SetGeometry(double x, double y, double w, double h,
   bbox_height_ = h + stroke_width_ * 2;
 }
 
-// Translate.
+// Moves the object.
 void RoundedRectangle::Move(double dx, double dy) {
   cx_ += dx;
   cy_ += dy;
@@ -84,8 +82,6 @@ std::unique_ptr<GraphicsObject> RoundedRectangle::Clone() const {
   rr->SetStrokeColor(stroke_color_);
   rr->SetStrokeWidth(stroke_width_);
   rr->SetFillColor(fill_color_);
-  // Clone should copy the ratio too, which constructor will re-derive from
-  // radius/dims
   return rr;
 }
 

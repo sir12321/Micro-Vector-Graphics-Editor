@@ -7,6 +7,7 @@
 #include "../../gui/headers/tools.h"
 #include "../headers/graphics_object.h"
 
+// Factory function to create shape objects.
 std::unique_ptr<GraphicsObject> CreateShape(Tool tool, const QPoint& start,
                                             const QPoint& end,
                                             const std::string& fill_color,

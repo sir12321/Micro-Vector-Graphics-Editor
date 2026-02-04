@@ -4,7 +4,7 @@
 
 using namespace std;
 
-// Exports to SVG. Note use of 'rx' and 'ry'.
+// Exports to SVG.
 string RoundedRectangle::ToSvg() const {
   return "<rect x=\"" + to_string(cx_ - width_ / 2.0) + "\" y=\"" +
          to_string(cy_ - height_ / 2.0) + "\" width=\"" + to_string(width_) +
@@ -14,7 +14,7 @@ string RoundedRectangle::ToSvg() const {
          to_string(stroke_width_) + "\" />\n";
 }
 
-// Helper for parsing spaces.
+// Helper for parsing SVG attributes.
 vector<std::string> split_by_space_rr(const std::string& s) {
   vector<std::string> result;
   std::string current;
@@ -32,7 +32,7 @@ vector<std::string> split_by_space_rr(const std::string& s) {
   return result;
 }
 
-// Parses SVG to create RoundedRectangle.
+// Imports from SVG.
 std::unique_ptr<GraphicsObject> RoundedRectangle::FromSvg(
     const std::string& svg) {
   double x = 0, y = 0, width = 0, height = 0, radius = 10.0;

@@ -1,11 +1,8 @@
-// Implementation of the TextObject class.
-
 #include "../../headers/text.h"
 
 using namespace std;
 
-// Constructor sets up initial text properties and calculates approximate
-// bounding box.
+// Constructor.
 TextObject::TextObject(double x, double y, const string& text, int font_size,
                        const string& font_family)
     : x_(x),
@@ -15,17 +12,17 @@ TextObject::TextObject(double x, double y, const string& text, int font_size,
       font_family_(font_family),
       show_cursor_(false) {
   id_ = "text";
-  stroke_width_ = 0;  // Text objects don't have strokes in this simple model
+  stroke_width_ = 0;
   bbox_x_ = x_;
-  bbox_y_ = y_;                                      // baseline approximation
+  bbox_y_ = y_;
   bbox_width_ = (text_.length()) * font_size_ + 18;  // rough width heuristic
   bbox_height_ = font_size_ + 30;
 }
 
-// Adds a character to the string.
+// Appends character.
 void TextObject::AppendChar(char c) { text_ += c; }
 
-// Removes the last character.
+// Removes last character.
 void TextObject::Backspace() {
   if (!text_.empty()) {
     text_.pop_back();
@@ -34,12 +31,10 @@ void TextObject::Backspace() {
 
 void TextObject::SetText(const std::string& text) { text_ = text; }
 
-// Controls cursor visibility state.
+// Controls cursor visibility.
 void TextObject::SetEditing(bool editing) { show_cursor_ = editing; }
 
-// Draws the text and optionally the cursor/editing box.
-// Uses QFontMetrics to try and get accurate sizes, but relies on heuristics for
-// bounding box elsewhere.
+// Draws the text.
 void TextObject::Draw(QPainter& painter) const {
   QFont font;
   font.setPointSize(font_size_);
@@ -63,7 +58,7 @@ void TextObject::Draw(QPainter& painter) const {
 
     painter.drawLine(cursor_x, top, cursor_x, bottom);
 
-    // Update bounding box dynamically while typing so clicks register correctly
+    // Update bounding box dynamically used for clicks.
     bbox_width_ = (text_.length()) * font_size_ + 18;
     bbox_height_ = bottom - top + 12;
     QPen box_pen(Qt::blue);
@@ -74,7 +69,7 @@ void TextObject::Draw(QPainter& painter) const {
   }
 }
 
-// Translates the text object.
+// Moves the text.
 void TextObject::Move(double dx, double dy) {
   x_ += dx;
   y_ += dy;

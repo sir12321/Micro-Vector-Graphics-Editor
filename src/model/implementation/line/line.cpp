@@ -1,17 +1,15 @@
-// Implementation of the Line class.
-
 #include "../../headers/line.h"
 
 #include <algorithm>
 
 using namespace std;
 
-// Constructor for Line. Calculates bounding box around the segment.
+// Constructor.
 Line::Line(double x1, double y1, double x2, double y2, int stroke_width)
     : x1_(x1), y1_(y1), x2_(x2), y2_(y2) {
   id_ = "line";
   SetStrokeWidth(stroke_width);
-  // Bounding box logic uses min/max logic to encompass the line + stroke width.
+  // Calculate bounding box.
   bbox_x_ = min(x1_, x2_) - stroke_width_;
   bbox_y_ = min(y1_, y2_) - stroke_width_;
   bbox_width_ = abs(x2_ - x1_) + stroke_width_ * 2;
@@ -27,7 +25,7 @@ void Line::Draw(QPainter& painter) const {
   painter.drawLine(x1_, y1_, x2_, y2_);
 }
 
-// Updates geometry. Used when dragging to set the endpoint (x2, y2).
+// Updates geometry.
 void Line::SetGeometry(double x, double y, double w, double h,
                        double rounded_rect_radius, double end_x, double end_y) {
   x2_ = end_x;
@@ -39,7 +37,7 @@ void Line::SetGeometry(double x, double y, double w, double h,
   bbox_height_ = abs(y2_ - y1_) + stroke_width_ * 2;
 }
 
-// Moves the line by adding delta (dx, dy) to both start and end points.
+// Moves the line.
 void Line::Move(double dx, double dy) {
   x1_ += dx;
   y1_ += dy;

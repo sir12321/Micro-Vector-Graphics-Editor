@@ -2,6 +2,7 @@
 
 #include "../../headers/canvas.h"
 
+// Renders all diagram objects and selection indicators
 void Canvas::paintEvent(QPaintEvent* /*event*/) {
   QPainter painter(this);
   painter.setRenderHint(QPainter::Antialiasing);

@@ -3,16 +3,19 @@
 #include "../../../../model/shape_factory/shape_factory.h"
 #include "../../../headers/canvas.h"
 
+// Handles tools usage (creation, selection, filling) on mouse press
 void Canvas::mousePressEvent(QMouseEvent* event) {
   if (event->button() != Qt::LeftButton) {
     return;
   }
+  // Deselect if tool is active to avoid conflict
   if (selected_object_ != nullptr && active_tool_ != Tool::None) {
     selected_object_ = nullptr;
     dragging_object_ = nullptr;
     update();
   }
 
+  // Commit text editing if active
   if (is_typing_text_ && active_tool_text_) {
     if (editing_text_) {
       is_typing_text_ = false;
@@ -44,10 +47,12 @@ void Canvas::mousePressEvent(QMouseEvent* event) {
     return;
   }
 
-  // text tool
+  // Handle Text Tool
   if (active_tool_ == Tool::Text && event->button() == Qt::LeftButton) {
     PushUndoState();
     active_tool_text_ = true;
+    
+    // Commit existing text if any
     if (is_typing_text_ && editing_text_) {
       is_typing_text_ = false;
       editing_text_->SetEditing(false);
@@ -66,9 +71,12 @@ void Canvas::mousePressEvent(QMouseEvent* event) {
     diagram_.AddObject(std::move(text));
     update();
     return;
-  } else if (active_tool_ != Tool::None && active_tool_ != Tool::Fill &&
-             active_tool_ != Tool::StrokeFill &&
-             event->button() == Qt::LeftButton) {
+  }
+
+  // Standard shape creation (rect, circle, line etc)
+  if (active_tool_ != Tool::None && active_tool_ != Tool::Fill &&
+      active_tool_ != Tool::StrokeFill &&
+      event->button() == Qt::LeftButton) {
     PushUndoState();
     drag_start_ = event->pos();
     create_start_ = event->pos();
@@ -86,19 +94,9 @@ void Canvas::mousePressEvent(QMouseEvent* event) {
     return;
   }
 
-  if (is_typing_text_) {
-    if (active_tool_ == Tool::None && editing_text_) {
-      is_typing_text_ = false;
-      editing_text_->SetEditing(false);
-      editing_text_ = nullptr;
-      update();
-    } else {
-      return;
-    }
-  }
-
   // ---- FILL / STROKEFILL MODE ----
   if (active_tool_ == Tool::Fill) {
+    // Find topmost fillable object
     GraphicsObject* obj = nullptr;
     for (int i = static_cast<int>(diagram_.size()) - 1; i >= 0; --i) {
       auto& object = diagram_.objects()[i];
@@ -131,6 +129,8 @@ void Canvas::mousePressEvent(QMouseEvent* event) {
   selected_object_ = nullptr;
   dragging_object_ = nullptr;
   PushUndoState();
+
+  // Hit test for selection and resize handles
   selected_object_ = GetObjectAt(event->pos());
   dragging_object_ = GetObjectAt(event->pos());
 

@@ -1,5 +1,3 @@
-// Implementation of the Freehand class.
-
 #include "../../headers/freehand.h"
 
 #include <QColor>
@@ -10,7 +8,6 @@
 using namespace std;
 
 // Constructs an empty Freehand object.
-// Initializes the bounding box to zero and sets the ID to "freehand".
 Freehand::Freehand() {
   id_ = "freehand";
   bbox_x_ = 0;
@@ -19,8 +16,7 @@ Freehand::Freehand() {
   bbox_height_ = 0;
 }
 
-// Adds a point to the freehand drawing path.
-// Updates the bounding box dynamically to encompass the new point.
+// Adds a point to the path.
 void Freehand::AddPoint(const QPointF& p) {
   points_.push_back(p);
 
@@ -48,8 +44,7 @@ void Freehand::AddPoint(const QPointF& p) {
   bbox_height_ = max_y - min_y;
 }
 
-// Draws the connected line segments using smooth joins.
-// Uses QPainterPath to render the continuous line.
+// Draws the path.
 void Freehand::Draw(QPainter& painter) const {
   if (points_.size() < 2) return;
 
@@ -70,8 +65,7 @@ void Freehand::Draw(QPainter& painter) const {
   painter.drawPath(path);
 }
 
-// Translates all points in the path by a given offset.
-// Updates the bounding box position accordingly.
+// Moves the path.
 void Freehand::Move(double dx, double dy) {
   for (auto& p : points_) {
     p += QPointF(dx, dy);
@@ -85,14 +79,12 @@ void Freehand::set_points(const std::vector<QPointF>& points) {
   points_ = points;
 }
 
-// Sets geometric properties (Unused for Freehand).
-// Freehand shape is defined by its points, not a bounding box geometry.
+// Sets geometric properties (Unused).
 void Freehand::SetGeometry(double x, double y, double w, double h,
                            double rounded_rect_radius, double end_x,
                            double end_y) {}
 
-// Creates a deep copy of the Freehand object.
-// Clones all points and visual properties.
+// Creates a deep copy.
 std::unique_ptr<GraphicsObject> Freehand::Clone() const {
   auto f = std::make_unique<Freehand>(*this);
   f->set_points(points_);

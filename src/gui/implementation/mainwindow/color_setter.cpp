@@ -4,6 +4,7 @@
 #include "../../headers/mainwindow.h"
 #include "../ui_mainwindow.h"
 
+// Updates the active stroke color UI (button and text).
 void MainWindow::setcolor_9_appearance() {
   ui_->pushButton_9->setStyleSheet(
       "background-color: " +
@@ -11,85 +12,71 @@ void MainWindow::setcolor_9_appearance() {
   ui_->lineEdit_2->setText(
       QString::fromStdString(canvas_->GetActiveStrokeColor()));
 }
+
+// Updates the active fill color UI (button and text).
 void MainWindow::setcolor_8_appearance() {
   ui_->pushButton_8->setStyleSheet(
       "background-color: " +
       QString::fromStdString(canvas_->GetActiveFillColor()) + ";");
   ui_->lineEdit->setText(QString::fromStdString(canvas_->GetActiveFillColor()));
 }
+
+// Parses hex color from the input field and applies it to Fill.
 void MainWindow::ApplyFillColorFromLineEdit() {
   QString text = ui_->lineEdit->text().trimmed();
-
-  // Allow user to omit '#'
   if (!text.startsWith("#")) {
     text = "#" + text;
   }
   QColor color(text);
-
-  // Validate color
   if (!color.isValid()) {
     ui_->lineEdit->setStyleSheet("border: 2px solid red;");
     return;
   }
-
-  // Reset error state
   ui_->lineEdit->setStyleSheet("");
-
-  // Update Canvas state
   canvas_->SetActiveFillColor(color.name().toStdString());
   setcolor_8_appearance();
-
-  // Update button appearance
   ui_->pushButton_8->setStyleSheet("background-color: " + color.name() +
                                   "; border: 1px solid black;");
 }
+
+// Parses hex color from the input field and applies it to Stroke.
 void MainWindow::ApplyStrokeColorFromLineEdit() {
   QString text = ui_->lineEdit_2->text().trimmed();
-
-  // Allow user to omit '#'
   if (!text.startsWith("#")) {
     text = "#" + text;
   }
   QColor color(text);
-
-  // Validate color
   if (!color.isValid()) {
     ui_->lineEdit_2->setStyleSheet("border: 2px solid red;");
     return;
   }
-
-  // Reset error state
   ui_->lineEdit_2->setStyleSheet("");
-
-  // Update Canvas state
   canvas_->SetActiveStrokeColor(color.name().toStdString());
-
-  // Update button appearance
   ui_->pushButton_9->setStyleSheet("background-color: " + color.name() +
                                   "; border: 1px solid black;");
   setcolor_9_appearance();
 }
+
+// Opens a dialog to pick a custom Fill color.
 void MainWindow::ChooseFillColor() {
   QColor color = QColorDialog::getColor(Qt::white, this, "Choose Fill Color");
 
   if (!color.isValid()) return;
-
-  // Update Canvas state
   canvas_->SetActiveFillColor(color.name().toStdString());
-
   setcolor_8_appearance();
 }
+
+// Opens a dialog to pick a custom Stroke color.
 void MainWindow::ChooseStrokeColor() {
   QColor color = QColorDialog::getColor(Qt::black, this, "Choose Stroke Color");
 
   if (!color.isValid()) return;
-
-  // Update Canvas state
   canvas_->SetActiveStrokeColor(color.name().toStdString());
-
-  // Update button appearance
   setcolor_9_appearance();
 }
+
+// ---- Fill Color Setters ----
+
 void MainWindow::setfillcolortransparent() {
   canvas_->SetActiveFillColor("#00000000");
   setcolor_8_appearance();
@@ -142,6 +129,9 @@ void MainWindow::setfillcolorbrown() {
   canvas_->SetActiveFillColor("#A52A2A");
   setcolor_8_appearance();
 }
+
+// ---- Stroke Color Setters ----
+
 void MainWindow::setstrokecolorwhite() {
   canvas_->SetActiveStrokeColor("#FFFFFF");
   setcolor_9_appearance();
@@ -190,11 +180,16 @@ void MainWindow::setstrokecolorbrown() {
   canvas_->SetActiveStrokeColor("#A52A2A");
   setcolor_9_appearance();
 }
+
 void MainWindow::StrokeWidthChanged(int value) {
-  // Update Canvas state
   canvas_->SetActiveStrokeWidth(value);
 }
+
 void MainWindow::setstrokecolortransparent() {
   canvas_->SetActiveStrokeColor("#00000000");
   setcolor_9_appearance();
+}
+void MainWindow::ApplyFontFromComboBox() {
+  QFont currentFont = ui_->fontComboBox->currentFont();
+  canvas_->SetActiveFontFamily(currentFont);
 }

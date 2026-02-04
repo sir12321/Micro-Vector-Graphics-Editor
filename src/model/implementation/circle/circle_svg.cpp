@@ -2,7 +2,7 @@
 
 using namespace std;
 
-// Serialize to standard SVG <circle> tag.
+// Exports to SVG.
 string Circle::ToSvg() const {
   return "<circle cx=\"" + to_string(cx_) + "\" cy=\"" + to_string(cy_) +
          "\" rx=\"" + to_string(rx_) + "\" ry=\"" + to_string(ry_) +
@@ -10,7 +10,7 @@ string Circle::ToSvg() const {
          "\" stroke-width=\"" + to_string(stroke_width_) + "\" />\n";
 }
 
-// Helper to parse space-separated attributes in a crude manner.
+// Helper to parse space-separated attributes.
 vector<std::string> split_by_space_circle(const std::string& s) {
   vector<std::string> result;
   std::string current;
@@ -28,8 +28,7 @@ vector<std::string> split_by_space_circle(const std::string& s) {
   return result;
 }
 
-// Parse SVG string to create a Circle object.
-// Extracts cx, cy, r, and style attributes.
+// Imports from SVG.
 std::unique_ptr<GraphicsObject> Circle::FromSvg(const std::string& svg) {
   double cx = 0, cy = 0, rx = 0, ry = 0;
   int stroke_width = 0;

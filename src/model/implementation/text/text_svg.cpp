@@ -2,7 +2,7 @@
 
 using namespace std;
 
-// Exports to SVG <text> tag.
+// Exports to SVG.
 string TextObject::ToSvg() const {
   return "<text x=\"" + to_string(x_) + "\" y=\"" + to_string(y_) +
          "\" fill=\"" + fill_color_ + "\" font-size=\"" +
@@ -10,7 +10,7 @@ string TextObject::ToSvg() const {
          text_ + "</text>\n";
 }
 
-// Helper to split text by spaces (naive parsing)
+// Helper to split text by spaces.
 vector<std::string> split_by_space_text(const std::string& s) {
   vector<std::string> result;
   std::string current;
@@ -28,7 +28,7 @@ vector<std::string> split_by_space_text(const std::string& s) {
   return result;
 }
 
-// Parses SVG string to TextObject.
+// Imports from SVG.
 std::unique_ptr<GraphicsObject> TextObject::FromSvg(const std::string& svg) {
   double x = 0, y = 0;
   int font_size = 12;

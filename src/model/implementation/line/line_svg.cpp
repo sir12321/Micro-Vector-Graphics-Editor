@@ -12,7 +12,7 @@ string Line::ToSvg() const {
          to_string(stroke_width_) + "\" />\n";
 }
 
-// Helper for parsing line SVG.
+// Helper for parsing SVG attributes.
 vector<std::string> split_by_space_line(const std::string& s) {
   vector<std::string> result;
   std::string current;
@@ -30,7 +30,7 @@ vector<std::string> split_by_space_line(const std::string& s) {
   return result;
 }
 
-// Parses SVG string to check for x1, y1, x2, y2 attributes.
+// Imports from SVG.
 std::unique_ptr<GraphicsObject> Line::FromSvg(const std::string& svg) {
   double x1 = 0, y1 = 0, x2 = 0, y2 = 0;
   int stroke_width = 0;

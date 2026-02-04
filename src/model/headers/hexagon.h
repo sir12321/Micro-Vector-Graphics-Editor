@@ -1,13 +1,9 @@
-// Definition of the Hexagon graphics object.
-
 #ifndef SRC_MODEL_HEADERS_HEXAGON_H_
 #define SRC_MODEL_HEADERS_HEXAGON_H_
 
 #include "graphics_object.h"
 
 // Represents a regular hexagon.
-//
-// Defined by its center and one vertex (which determines size and rotation).
 class Hexagon : public GraphicsObject {
  private:
   double cx_;     // Center X coordinate.
@@ -16,28 +12,23 @@ class Hexagon : public GraphicsObject {
 
  public:
   // Constructs a Hexagon.
-  // @param cx Center X.
-  // @param cy Center Y.
-  // @param x Vertex X.
-  // @param y Vertex Y.
-  // @param stroke_width Outline width.
   Hexagon(double cx, double cy, double x, double y, int stroke_width);
 
   // Draws the hexagon.
   void Draw(QPainter& painter) const override;
 
-  // Updates geometry based on user mouse interaction.
+  // Updates geometry during creation.
   void SetGeometry(double x, double y, double w, double h,
                    double rounded_rect_radius, double end_x,
                    double end_y) override;
 
-  // Move the hexagon.
+  // Moves the hexagon.
   void Move(double dx, double dy) override;
 
-  // Exports to SVG <polygon>.
+  // Exports to SVG.
   std::string ToSvg() const override;
 
-  // Parses SVG <polygon> to create Hexagon.
+  // Imports from SVG.
   std::unique_ptr<GraphicsObject> FromSvg(const std::string& svg) override;
 
   // Creates a deep copy.

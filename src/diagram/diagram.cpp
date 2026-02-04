@@ -12,16 +12,19 @@ using namespace std;
 #include "../model/headers/rounded_rectangle.h"
 #include "../model/headers/text.h"
 
+// Adds a new graphics object to the diagram
 void Diagram::AddObject(unique_ptr<GraphicsObject> object) {
   objects_.push_back(move(object));
 }
 
+// Removes the object at the specified index
 void Diagram::RemoveObject(size_t index) {
   if (index < objects_.size()) {
     objects_.erase(objects_.begin() + index);
   }
 }
 
+// Clears all objects from the diagram
 void Diagram::Clear() { objects_.clear(); }
 
 const vector<unique_ptr<GraphicsObject>>& Diagram::objects() const {
@@ -30,6 +33,7 @@ const vector<unique_ptr<GraphicsObject>>& Diagram::objects() const {
 
 size_t Diagram::size() const { return objects_.size(); }
 
+// Generates SVG string representation of the diagram
 std::string Diagram::ToSvg() const {
   std::string out = "";
   out += "<svg width=\"800\" height=\"600\">\n";
@@ -40,6 +44,7 @@ std::string Diagram::ToSvg() const {
   return out;
 }
 
+// Helper to split string by newlines for parsing
 vector<string> split_by_newline(const std::string& s) {
   vector<string> result;
   std::string current;
@@ -57,6 +62,7 @@ vector<string> split_by_newline(const std::string& s) {
   return result;
 }
 
+// Parses SVG string to reconstruct diagram objects
 void Diagram::FromSvg(const std::string& svg) {
   vector<std::string> lines = split_by_newline(svg);
   if (lines.size() < 2) return;

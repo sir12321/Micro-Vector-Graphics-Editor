@@ -14,6 +14,7 @@ class MainWindow;
 }
 QT_END_NAMESPACE
 
+// Main application window managing UI and coordination
 class MainWindow : public QMainWindow {
   Q_OBJECT
 
@@ -22,9 +23,12 @@ class MainWindow : public QMainWindow {
   ~MainWindow();
 
  private slots:
+  // Initialization & Tool Management
   void initialise();
   void ToggleTool(Tool tool, QAction *action);
   void connectSignals();
+
+  // Color & Property Management
   void ApplyFillColorFromLineEdit();
   void ApplyStrokeColorFromLineEdit();
   void ChooseFillColor();
@@ -59,6 +63,8 @@ class MainWindow : public QMainWindow {
   void setstrokecolorbrown();
   void StrokeWidthChanged(int value);
   void ApplyFontFromComboBox();
+
+  // File Operations
   void Open();
   bool Save();
   bool SaveAs();
@@ -66,11 +72,12 @@ class MainWindow : public QMainWindow {
   void New();
 
  private:
+  // Helper to check for unsaved changes before closing/opening
   bool MaybeSave();
 
   Ui::MainWindow *ui_;
-  Diagram diagram_;  // MODEL
-  Canvas *canvas_;   // VIEW
+  Diagram diagram_;
+  Canvas *canvas_;
   QString current_file_;
 
   Tool active_tool_;

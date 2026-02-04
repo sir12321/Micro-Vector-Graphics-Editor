@@ -6,7 +6,7 @@
 
 using namespace std;
 
-// Exports to SVG polygon element with points.
+// Exports to SVG.
 string Hexagon::ToSvg() const {
   string points;
 
@@ -43,7 +43,7 @@ vector<std::string> split_by_space_hexagon(const std::string& s) {
   return result;
 }
 
-// Reconstructs hexagon from SVG polygon attributes.
+// Imports from SVG.
 std::unique_ptr<GraphicsObject> Hexagon::FromSvg(const std::string& svg) {
   double cx = 0, cy = 0, x = 0, y = 0;
   int stroke_width = 0;

@@ -1,5 +1,3 @@
-// Definition of the Freehand graphics object.
-
 #ifndef SRC_MODEL_HEADERS_FREEHAND_H_
 #define SRC_MODEL_HEADERS_FREEHAND_H_
 
@@ -9,7 +7,6 @@
 #include "graphics_object.h"
 
 // Represents a freehand drawing path.
-// Stores a list of points connected by line segments.
 class Freehand : public GraphicsObject {
  private:
   std::vector<QPointF> points_;  // List of points in the path.
@@ -18,27 +15,27 @@ class Freehand : public GraphicsObject {
   // Constructs an empty Freehand object.
   explicit Freehand();
 
-  // Sets the entire path of points.
+  // Sets the path points.
   void set_points(const std::vector<QPointF>& points);
 
-  // Appends a new point to the drawing path.
+  // Appends a point to the path.
   void AddPoint(const QPointF& p);
 
-  // Draws the path using QPainterPath.
+  // Draws the path.
   void Draw(QPainter& painter) const override;
 
-  // Moves the entire path.
+  // Moves the path.
   void Move(double dx, double dy) override;
 
-  // Unused for freehand (geometry is defined by point list).
+  // Updates geometry (unused for freehand).
   void SetGeometry(double x, double y, double w, double h,
                    double rounded_rect_radius, double end_x,
                    double end_y) override;
 
-  // Exports path to SVG <path> d attribute.
+  // Exports to SVG.
   std::string ToSvg() const override;
 
-  // Parses SVG path data.
+  // Imports from SVG.
   std::unique_ptr<GraphicsObject> FromSvg(const std::string& svg) override;
 
   // Creates a deep copy.

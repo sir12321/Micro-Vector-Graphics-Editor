@@ -22,8 +22,3 @@ MainWindow::MainWindow(QWidget* parent)
 }
 
 MainWindow::~MainWindow() { delete ui_; }
-
-void MainWindow::ApplyFontFromComboBox() {
-  QFont currentFont = ui_->fontComboBox->currentFont();
-  canvas_->SetActiveFontFamily(currentFont);
-}

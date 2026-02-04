@@ -1,13 +1,9 @@
-// Definition of the Circle graphics object.
-
 #ifndef SRC_MODEL_HEADERS_CIRCLE_H_
 #define SRC_MODEL_HEADERS_CIRCLE_H_
 
 #include "graphics_object.h"
 
-// Represents a circle shape.
-//
-// Defined by a center point (cx, cy) and a radius (r).
+// Represents a circle shape defined by center and radius.
 class Circle : public GraphicsObject {
  private:
   double cx_;  ///< X-coordinate of the center.
@@ -19,31 +15,26 @@ class Circle : public GraphicsObject {
 
  public:
   // Constructs a circle.
-  // @param cx Center X.
-  // @param cy Center Y.
-  // @param r Radius.
-  // @param stroke_width Width of the outline.
   Circle(double cx, double cy, double r, int stroke_width);
 
-  // Draws the circle on the provided painter.
+  // Draws the circle.
   void Draw(QPainter& painter) const override;
 
-  // Updates the geometry during creation/editing.
-  // Used when dragging the mouse to define radius.
+  // Updates geometry during creation.
   void SetGeometry(double x, double y, double w, double h,
                    double rounded_rect_radius, double end_x,
                    double end_y) override;
 
-  // Moves the circle by a delta.
+  // Moves the circle.
   void Move(double dx, double dy) override;
 
-  // Converts to SVG format.
+  // Exports to SVG.
   std::string ToSvg() const override;
 
-  // Creates a Circle object from an SVG string.
+  // Imports from SVG.
   std::unique_ptr<GraphicsObject> FromSvg(const std::string& svg) override;
 
-  // Creates a deep copy of the circle.
+  // Creates a deep copy.
   std::unique_ptr<GraphicsObject> Clone() const override;
 
   void MoveStart(double x, double y) override;

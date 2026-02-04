@@ -2,6 +2,7 @@
 
 #include "../../headers/canvas.h"
 
+// Handles keyboard events for deletion and text entry
 void Canvas::keyPressEvent(QKeyEvent* event) {
   // ---- Global shortcuts ----
   if (event->key() == Qt::Key_Delete) {

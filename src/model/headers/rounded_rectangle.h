@@ -1,5 +1,3 @@
-// Definition of the RoundedRectangle graphics object.
-
 #ifndef SRC_MODEL_HEADERS_ROUNDED_RECTANGLE_H_
 #define SRC_MODEL_HEADERS_ROUNDED_RECTANGLE_H_
 
@@ -19,22 +17,22 @@ class RoundedRectangle : public GraphicsObject {
 
  public:
   // Constructs a RoundedRectangle.
-  // @param cx Center X.
-  // @param cy Center Y.
-  // @param width Width.
-  // @param height Height.
-  // @param radius Corner radius (default 10.0).
-  // @param stroke_width Outline width (default 1).
   RoundedRectangle(double cx, double cy, double width, double height,
                    double radius = 10.0, int stroke_width = 1);
 
+  // Draws the rounded rectangle.
   void Draw(QPainter& painter) const override;
+  // Updates geometry with radius.
   void SetGeometry(double x, double y, double w, double h,
                    double rounded_rect_radius, double end_x,
                    double end_y) override;
+  // Moves the object.
   void Move(double dx, double dy) override;
+  // Exports to SVG.
   std::string ToSvg() const override;
+  // Imports from SVG.
   std::unique_ptr<GraphicsObject> FromSvg(const std::string& svg) override;
+  // Creates a deep copy.
   std::unique_ptr<GraphicsObject> Clone() const override;
 
   void MoveStart(double x, double y) override;

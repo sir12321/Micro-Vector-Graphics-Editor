@@ -1,24 +1,21 @@
-// Implementation of the Circle class.
-
 #include "../../headers/circle.h"
 
 #include <cmath>
 
 using namespace std;
 
-// Check header for documentation.
 Circle::Circle(double cx, double cy, double r, int stroke_width)
     : cx_(cx), cy_(cy), rx_(r), ry_(r), endx_(cx + r), endy_(cy + r) {
   id_ = "circle";
   SetStrokeWidth(stroke_width);
-  // Calculate bounding box based on center, radius, and stroke width.
+  // Calculate bounding box.
   bbox_x_ = cx_ - (rx_ + stroke_width_ * 2);
   bbox_y_ = cy_ - (ry_ + stroke_width_ * 2);
   bbox_width_ = 2 * (rx_ + stroke_width_ * 2);
   bbox_height_ = 2 * (ry_ + stroke_width_ * 2);
 }
 
-// Draws the ellipse using QPainter in Qt.
+// Draws the ellipse.
 void Circle::Draw(QPainter& painter) const {
   QPen pen(QColor(QString::fromStdString(stroke_color_)));
   pen.setWidth(stroke_width_);
@@ -29,7 +26,7 @@ void Circle::Draw(QPainter& painter) const {
   painter.drawEllipse(QPointF(cx_, cy_), rx_, ry_);
 }
 
-// Translate the center point and update the bounding box.
+// Moves the circle.
 void Circle::Move(double dx, double dy) {
   cx_ += dx;
   cy_ += dy;
@@ -39,8 +36,7 @@ void Circle::Move(double dx, double dy) {
   endy_ += dy;
 }
 
-// Define the circle by center (implicit from creation) and end point.
-// Radius is distance between center and current mouse point.
+// Updates geometry.
 void Circle::SetGeometry(double x, double y, double w, double h,
                          double rounded_rect_radius, double end_x,
                          double end_y) {

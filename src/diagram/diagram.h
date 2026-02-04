@@ -6,6 +6,7 @@
 
 #include "../model/headers/graphics_object.h"
 
+// Represents the drawing canvas containing graphics objects
 class Diagram {
  public:
   Diagram() = default;
@@ -28,6 +29,7 @@ class Diagram {
 
   size_t size() const;
 
+  // Serialization
   std::string ToSvg() const;
   void FromSvg(const std::string& svg);
 

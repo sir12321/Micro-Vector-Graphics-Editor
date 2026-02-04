@@ -1,6 +1,3 @@
-// Implementation of file operations (Open, Save, Save As) for the
-// application.
-
 #include <QFileDialog>
 #include <QMessageBox>
 #include <fstream>
@@ -10,9 +7,7 @@
 #include "../../headers/mainwindow.h"
 #include "../ui_mainwindow.h"
 
-// Helper to ask the user if they want to save changes.
-// Returns true if the user chooses Save (and save succeeds), Discard, or if
-// there are no changes. false if the user chooses Cancel or if the save fails.
+// Returns true if safe to proceed (saved or discarded), false to cancel.
 bool MainWindow::MaybeSave() {
   QMessageBox::StandardButton ret;
   ret = QMessageBox::warning(
@@ -29,10 +24,7 @@ bool MainWindow::MaybeSave() {
   return true;  // Discard
 }
 
-// Prompts the user to choose a file path and saves the diagram as SVG.
-//
-// Updates the current file path upon success.
-// Returns True if saved successfully, False otherwise or cancelled.
+// Saves to a new file.
 bool MainWindow::SaveAs() {
   QString file =
       QFileDialog::getSaveFileName(this, "Save As", "", "SVG Files (*.svg)");
@@ -45,10 +37,7 @@ bool MainWindow::SaveAs() {
   return true;
 }
 
-// Saves the current diagram to the active file path.
-//
-// If no file path is set (i.e., new file), it triggers SaveAs().
-// Returns True if saved successfully, False if cancelled.
+// Saves the diagram.
 bool MainWindow::Save() {
   if (current_file_.isEmpty()) {
     return SaveAs();
@@ -59,9 +48,7 @@ bool MainWindow::Save() {
   return true;
 }
 
-// Opens an existing SVG file and loads it into the canvas.
-//
-// Prompts the user to select a file. Replaces the current canvas content.
+// Opens an SVG file.
 void MainWindow::Open() {
   if (MaybeSave()) {
     QString file =
@@ -81,9 +68,7 @@ void MainWindow::Open() {
   }
 }
 
-// Closes the current document.
-//
-// Checks for unsaved changes before clearing.
+// Closes the document.
 void MainWindow::Close() {
   if (MaybeSave()) {
     diagram_.Clear();
@@ -94,8 +79,6 @@ void MainWindow::Close() {
 }
 
 // Creates a new document.
-//
-// Checks for unsaved changes before clearing.
 void MainWindow::New() {
   if (MaybeSave()) {
     diagram_.Clear();

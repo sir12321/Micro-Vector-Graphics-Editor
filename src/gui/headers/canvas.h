@@ -10,15 +10,19 @@
 #include "../../model/headers/text.h"
 #include "tools.h"
 
+// Main drawing widget handling rendering and user interaction
 class Canvas : public QWidget {
   Q_OBJECT
 
  public slots:
+  // Undo/Redo operations
   void Undo();
   void Redo();
 
  public:
   explicit Canvas(Diagram& diagram, QWidget* parent = nullptr);
+
+  // Tool and property setters/getters
   void SetActiveTool(Tool tool);
   void SetActiveFillColor(const std::string& color);
   void SetActiveStrokeColor(const std::string& color);
@@ -31,9 +35,13 @@ class Canvas : public QWidget {
   int GetTextFontSize() const;
   std::string GetActiveFillColor() const;
   std::string GetActiveStrokeColor() const;
+
+  // Clipboard operations
   void CopySelected();
   void CutSelected();
   void Paste();
+
+  // Serialization and history reset
   std::string ExportSvg() const;
   void ImportSvg(const std::string& svg);
   void UndoRedoReset();

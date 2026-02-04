@@ -66,7 +66,6 @@ void Canvas::DeleteSelectedObject() {
 
   for (size_t i = 0; i < diagram_.size(); ++i) {
     if (diagram_.objects()[i].get() == selected_object_) {
-      // Nullify all pointers to the object being deleted
       if (editing_text_ == selected_object_) {
         editing_text_ = nullptr;
         is_typing_text_ = false;

@@ -12,6 +12,7 @@
 #include "../headers/rounded_rectangle.h"
 #include "../headers/text.h"
 
+// Creates a shape based on the tool and parameters.
 std::unique_ptr<GraphicsObject> CreateShape(
     Tool tool, const QPoint& start, const QPoint& end,
     const std::string& fill_color, const std::string& stroke_color,

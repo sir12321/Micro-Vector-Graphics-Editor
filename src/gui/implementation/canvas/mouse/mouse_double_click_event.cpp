@@ -3,6 +3,7 @@
 #include "../../../../model/shape_factory/shape_factory.h"
 #include "../../../headers/canvas.h"
 
+// Handles double click to initiate text editing
 void Canvas::mouseDoubleClickEvent(QMouseEvent* event) {
   if (event->button() != Qt::LeftButton) {
     return;
@@ -11,7 +12,7 @@ void Canvas::mouseDoubleClickEvent(QMouseEvent* event) {
     return;
   }
 
-  // --EDITING TEXT MODE--
+  // Iterate top-to-bottom to find clicked text object
   for (int i = static_cast<int>(diagram_.size()) - 1; i >= 0; --i) {
     auto& obj = diagram_.objects()[i];
 

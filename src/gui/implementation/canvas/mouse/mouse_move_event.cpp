@@ -3,14 +3,9 @@
 #include "../../../../model/shape_factory/shape_factory.h"
 #include "../../../headers/canvas.h"
 
+// Handles mouse movement for resizing, creating, and moving objects
 void Canvas::mouseMoveEvent(QMouseEvent* event) {
-  // if (selected_object_) {
-  //   if (!IsPointInsideBoundingBox(selected_object_, event->pos())) {
-  //     selected_object_ = nullptr;
-  //     dragging_object_ = nullptr;
-  //     update();
-  //   }
-  // }
+  // Handle resizing via control points
   if (is_resize1_ && selected_object_) {
     selected_object_->MoveStart(event->pos().x(), event->pos().y());
     update();
@@ -21,15 +16,19 @@ void Canvas::mouseMoveEvent(QMouseEvent* event) {
     update();
     return;
   }
+  
+  // Handle freehand drawing path updates
   if (is_drawing_freehand_ && current_freehand_) {
     current_freehand_->AddPoint(event->pos());
     update();
     return;
   }
 
+  // Update preview object geometry during creation
   if (is_creating_ && preview_object_) {
     QPoint end = event->pos();
     double x, y, w, h;
+
 
     if (active_tool_ == Tool::Rectangle ||
         active_tool_ == Tool::RoundedRectangle) {
@@ -50,8 +49,8 @@ void Canvas::mouseMoveEvent(QMouseEvent* event) {
     return;
   }
 
+  // Handle object translation/dragging
   if (dragging_object_) {
-    // Safety check: verify object still exists in diagram
     bool object_exists = false;
     for (const auto& obj : diagram_.objects()) {
       if (obj.get() == dragging_object_) {

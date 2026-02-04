@@ -6,11 +6,6 @@
 
 // Connects all Qt signals from the UI elements to their respective
 // slots.
-//
-// This includes:
-// - Color palette buttons.
-// - Toolbar actions (tools, file operations, edit operations).
-// - Input widgets (line edits, spinboxes, sliders).
 void MainWindow::connectSignals() {
   // ---- Connect all tools ----
   connect(ui_->pushButton_8, &QPushButton::clicked, this,

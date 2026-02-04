@@ -2,7 +2,7 @@
 
 using namespace std;
 
-// Converts to standard SVG <rect> element.
+// Exports to SVG.
 string Rectangle::ToSvg() const {
   return "<rect x=\"" + to_string(cx_ - width_ / 2.0) + "\" y=\"" +
          to_string(cy_ - height_ / 2.0) + "\" width=\"" + to_string(width_) +
@@ -11,7 +11,7 @@ string Rectangle::ToSvg() const {
          fill_color_ + "\" />\n";
 }
 
-// Helper for parsing SVG attributes separated by spaces.
+// Helper for parsing SVG attributes.
 vector<std::string> split_by_space(const std::string& s) {
   vector<std::string> result;
   std::string current;
@@ -29,7 +29,7 @@ vector<std::string> split_by_space(const std::string& s) {
   return result;
 }
 
-// Reconstructs a Rectangle from attribute strings.
+// Imports from SVG.
 std::unique_ptr<GraphicsObject> Rectangle::FromSvg(const std::string& svg) {
   int x = 0, y = 0, width = 0, height = 0, stroke_width = 0;
   std::string fill_color = "white", stroke_color = "black";

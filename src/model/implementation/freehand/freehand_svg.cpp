@@ -7,8 +7,7 @@
 
 using namespace std;
 
-// Exports the freehand path to SVG format.
-// Generates an SVG path element with the 'd' attribute containing point data.
+// Exports to SVG.
 std::string Freehand::ToSvg() const {
   // A single point has no visible stroke in SVG; skip.
   if (points_.size() < 2) return "";
@@ -46,9 +45,7 @@ vector<std::string> split_by_space_freehand(const std::string& s) {
   return result;
 }
 
-// Parses SVG path data to reconstruct a Freehand object.
-// Reads stroke properties and path commands ('M', 'L') to rebuild the point
-// list.
+// Imports from SVG.
 std::unique_ptr<GraphicsObject> Freehand::FromSvg(const std::string& svg) {
   int stroke_width = 0;
   std::string stroke_color = "black";

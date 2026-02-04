@@ -1,5 +1,3 @@
-// Initializes the default state and UI appearance of the MainWindow.
-
 #include <QColorDialog>
 #include <QVBoxLayout>
 
@@ -8,10 +6,7 @@
 #include "../ui_mainwindow.h"
 
 // Sets up the initial UI state.
-// Defines default colors for the palette buttons and sets their stylesheets
-// to match the default themes.
 void MainWindow::initialise() {
-  // ---- DEFAULT ----
   QString defaultFill_1 = "#00000000";  // transparent
   QString defaultFill_2 = "#00000000";  // transparent
   QString defaultFill_8 = "#ffffff";    // white
@@ -45,7 +40,6 @@ void MainWindow::initialise() {
 
   int defaultStrokeWidth = 2;
 
-  // Update button appearance
   ui_->pushButton_1->setStyleSheet("background-color: " + defaultFill_1 + ";" +
                                    "border: 1px solid black;");
   ui_->pushButton_2->setStyleSheet("background-color: " + defaultFill_2 + ";" +
