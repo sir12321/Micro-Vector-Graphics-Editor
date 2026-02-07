@@ -42,10 +42,10 @@ bool Canvas::IsPointInsideBoundingBox(GraphicsObject* obj,
 
 bool Canvas::IsPointInsideResizeStart(GraphicsObject* obj,
                                       const QPoint& point) const {
-  double x = obj->GetStart().first - 5;
-  double y = obj->GetStart().second - 5;
-  double w = 10;
-  double h = 10;
+  double x = obj->GetStart().first - 10;
+  double y = obj->GetStart().second - 10;
+  double w = 20;
+  double h = 20;
 
   return point.x() >= x && point.x() <= x + w && point.y() >= y &&
          point.y() <= y + h;
@@ -53,10 +53,10 @@ bool Canvas::IsPointInsideResizeStart(GraphicsObject* obj,
 
 bool Canvas::IsPointInsideResizeEnd(GraphicsObject* obj,
                                     const QPoint& point) const {
-  double x = obj->GetEnd().first - 5;
-  double y = obj->GetEnd().second - 5;
-  double w = 10;
-  double h = 10;
+  double x = obj->GetEnd().first - 10;
+  double y = obj->GetEnd().second - 10;
+  double w = 20;
+  double h = 20;
 
   return point.x() >= x && point.x() <= x + w && point.y() >= y &&
          point.y() <= y + h;

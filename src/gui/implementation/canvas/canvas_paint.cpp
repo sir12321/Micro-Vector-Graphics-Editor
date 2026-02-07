@@ -22,10 +22,10 @@ void Canvas::paintEvent(QPaintEvent* /*event*/) {
         painter.setPen(pen);
         painter.setBrush(
             QColor(QString::fromStdString("#626262")).lighter(170));
-        painter.drawEllipse(obj->GetStart().first - 5,
-                            obj->GetStart().second - 5, 10, 10);
-        painter.drawEllipse(obj->GetEnd().first - 5, obj->GetEnd().second - 5,
-                            10, 10);
+        painter.drawEllipse(obj->GetStart().first - 8,
+                            obj->GetStart().second - 8, 16, 16);
+        painter.drawEllipse(obj->GetEnd().first - 8, obj->GetEnd().second - 8,
+                            16, 16);
       }
       QPen pen2(Qt::red);
       pen2.setStyle(Qt::DashLine);
