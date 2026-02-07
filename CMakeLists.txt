@@ -30,6 +30,7 @@ add_executable(program
     src/gui/implementation/canvas/canvas_get_set.cpp
     src/gui/implementation/canvas/canvas_key.cpp
     src/gui/implementation/canvas/canvas_paint.cpp
+    src/gui/implementation/canvas/canvas_cursor.cpp
     src/gui/implementation/canvas/mouse/mouse_double_click_event.cpp
     src/gui/implementation/canvas/mouse/mouse_move_event.cpp
     src/gui/implementation/canvas/mouse/mouse_press_event.cpp

@@ -28,6 +28,16 @@ void Canvas::mousePressEvent(QMouseEvent* event) {
     }
   }
 
+  if (active_tool_ == Tool::None) {
+    if (editing_text_ && selected_object_ != editing_text_) {
+      is_typing_text_ = false;
+      editing_text_->SetEditing(false);
+      editing_text_ = nullptr;
+      active_tool_text_ = false;
+      update();
+    }
+  }
+
   // ---- SHAPE CREATION MODE ----
   // freehand tool
   if (active_tool_ == Tool::Freehand && event->button() == Qt::LeftButton) {
@@ -51,7 +61,7 @@ void Canvas::mousePressEvent(QMouseEvent* event) {
   if (active_tool_ == Tool::Text && event->button() == Qt::LeftButton) {
     PushUndoState();
     active_tool_text_ = true;
-    
+
     // Commit existing text if any
     if (is_typing_text_ && editing_text_) {
       is_typing_text_ = false;
@@ -67,6 +77,8 @@ void Canvas::mousePressEvent(QMouseEvent* event) {
     editing_text_ = text.get();
     editing_text_->SetEditing(true);
     is_typing_text_ = true;
+    editing_text_->SetStrokeColor(active_stroke_color_);
+    editing_text_->SetFillColor(active_fill_color_);
 
     diagram_.AddObject(std::move(text));
     update();
@@ -75,8 +87,7 @@ void Canvas::mousePressEvent(QMouseEvent* event) {
 
   // Standard shape creation (rect, circle, line etc)
   if (active_tool_ != Tool::None && active_tool_ != Tool::Fill &&
-      active_tool_ != Tool::StrokeFill &&
-      event->button() == Qt::LeftButton) {
+      active_tool_ != Tool::StrokeFill && event->button() == Qt::LeftButton) {
     PushUndoState();
     drag_start_ = event->pos();
     create_start_ = event->pos();
@@ -96,13 +107,17 @@ void Canvas::mousePressEvent(QMouseEvent* event) {
 
   // ---- FILL / STROKEFILL MODE ----
   if (active_tool_ == Tool::Fill) {
-    // Find topmost fillable object
+    if (editing_text_) {
+      is_typing_text_ = false;
+      editing_text_->SetEditing(false);
+      editing_text_ = nullptr;
+      update();
+    }
     GraphicsObject* obj = nullptr;
     for (int i = static_cast<int>(diagram_.size()) - 1; i >= 0; --i) {
       auto& object = diagram_.objects()[i];
       if (IsPointInsideBoundingBox(object.get(), event->pos()) &&
-          object->GetId() != "freehand" && object->GetId() != "text" &&
-          object->GetId() != "line") {
+          object->GetId() != "freehand" && object->GetId() != "line") {
         obj = object.get();
         break;
       }
@@ -116,6 +131,12 @@ void Canvas::mousePressEvent(QMouseEvent* event) {
   }
 
   if (active_tool_ == Tool::StrokeFill) {
+    if (editing_text_) {
+      is_typing_text_ = false;
+      editing_text_->SetEditing(false);
+      editing_text_ = nullptr;
+      update();
+    }
     GraphicsObject* obj = GetObjectAt(event->pos());
     if (!obj) return;
     PushUndoState();
@@ -144,4 +165,5 @@ void Canvas::mousePressEvent(QMouseEvent* event) {
 
   last_mouse_pos_ = event->pos();
   update();
+  updateCursor();
 }

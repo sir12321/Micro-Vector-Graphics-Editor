@@ -99,6 +99,13 @@ void MainWindow::connectSignals() {
           [this]() { ToggleTool(Tool::Fill, ui_->actionFill); });
   connect(ui_->actionStrokeFill, &QAction::triggered, this,
           [this]() { ToggleTool(Tool::StrokeFill, ui_->actionStrokeFill); });
+  connect(ui_->checkBox, &QCheckBox::stateChanged, this, [this](int state) {
+    if (state == Qt::Checked) {
+      canvas_->edit_font_ = true;
+    } else {
+      canvas_->edit_font_ = false;
+    }
+  });
 
   connect(ui_->actionCopy, &QAction::triggered, canvas_, &Canvas::CopySelected);
   connect(ui_->actionCut, &QAction::triggered, canvas_, &Canvas::CutSelected);

@@ -23,6 +23,7 @@ Canvas::Canvas(Diagram& diagram, QWidget* parent)
       is_drawing_freehand_(false),
       is_resize1_(false),
       is_resize2_(false),
+      edit_font_(false),
       active_tool_text_(false) {
   setFocusPolicy(Qt::StrongFocus);
   setMouseTracking(true);
@@ -77,6 +78,7 @@ void Canvas::DeleteSelectedObject() {
       diagram_.RemoveObject(i);
       selected_object_ = nullptr;
       update();
+      updateCursor();
       return;
     }
   }
@@ -95,10 +97,14 @@ void Canvas::UndoRedoReset() {
 }
 
 void Canvas::PushUndoState() {
-  undo_stack_.push_back(diagram_.ToSvg());
+  std::string svg = diagram_.ToSvg();
+  if (!undo_stack_.empty() && undo_stack_.back() == svg) {
+    return;  // Avoid pushing duplicate states
+  }
+  undo_stack_.push_back(svg);
   redo_stack_.clear();
 
-  constexpr int MAX_UNDO = 30;
+  constexpr int MAX_UNDO = 50;
   if (undo_stack_.size() > MAX_UNDO) {
     undo_stack_.erase(undo_stack_.begin());
   }
@@ -113,6 +119,7 @@ void Canvas::Undo() {
 
   selected_object_ = nullptr;
   update();
+  updateCursor();
 }
 
 void Canvas::Redo() {
@@ -124,4 +131,5 @@ void Canvas::Redo() {
 
   selected_object_ = nullptr;
   update();
+  updateCursor();
 }

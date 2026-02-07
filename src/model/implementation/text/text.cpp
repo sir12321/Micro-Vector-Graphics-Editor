@@ -13,8 +13,8 @@ TextObject::TextObject(double x, double y, const string& text, int font_size,
       show_cursor_(false) {
   id_ = "text";
   stroke_width_ = 0;
-  bbox_x_ = x_;
-  bbox_y_ = y_;
+  bbox_x_ = x_ - 6;
+  bbox_y_ = y_ - 6;
   bbox_width_ = (text_.length()) * font_size_ + 18;  // rough width heuristic
   bbox_height_ = font_size_ + 30;
 }
@@ -47,20 +47,24 @@ void TextObject::Draw(QPainter& painter) const {
   int text_height = fm.height();
   int pad = 6;
 
+  bbox_width_ = text_width + pad * 4;
+  bbox_height_ = text_height + pad * 4;
+
+  painter.setBrush(QColor(QString::fromStdString(fill_color_)));
   painter.setPen(QColor(QString::fromStdString(fill_color_)));
-  painter.drawText(QPointF(bbox_x_ + pad, bbox_y_ + pad + fm.ascent()),
+  painter.drawRect(bbox_x_ + pad, bbox_y_ + pad, text_width + pad * 2,
+                   text_height + pad * 2);
+
+  painter.setPen(QColor(QString::fromStdString(stroke_color_)));
+  painter.drawText(QPointF(bbox_x_ + 2 * pad, bbox_y_ + 2 * pad + fm.ascent()),
                    QString::fromStdString(text_));
 
   if (show_cursor_) {
-    int cursor_x = bbox_x_ + pad + text_width;
-    int top = bbox_y_ + pad;
+    int cursor_x = bbox_x_ + 2 * pad + text_width;
+    int top = bbox_y_ + 2 * pad;
     int bottom = top + text_height;
-
+    painter.setPen(Qt::black);
     painter.drawLine(cursor_x, top, cursor_x, bottom);
-
-    // Update bounding box dynamically used for clicks.
-    bbox_width_ = (text_.length()) * font_size_ + 18;
-    bbox_height_ = bottom - top + 12;
     QPen box_pen(Qt::blue);
     box_pen.setStyle(Qt::DashLine);
     painter.setPen(box_pen);
@@ -89,6 +93,8 @@ std::unique_ptr<GraphicsObject> TextObject::Clone() const {
   t->SetFillColor(fill_color_);
   return t;
 }
+
+void TextObject::SetFontSize(int size) { font_size_ = size; }
 
 void TextObject::MoveStart(double x, double y) {}
 

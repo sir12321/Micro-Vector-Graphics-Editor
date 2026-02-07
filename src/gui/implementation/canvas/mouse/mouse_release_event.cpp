@@ -16,25 +16,30 @@ void Canvas::mouseReleaseEvent(QMouseEvent* event) {
     current_freehand_ = nullptr;
     is_drawing_freehand_ = false;
     update();
+    updateCursor();
     return;
   }
 
   // End object dragging
   if (event->button() == Qt::LeftButton && active_tool_ == Tool::None) {
     dragging_object_ = nullptr;
+    updateCursor();
     return;
   }
 
   // Finalize shape creation
   if (!is_creating_ || event->button() != Qt::LeftButton) {
+    updateCursor();
     return;
   }
   if (is_creating_ && event->button() == Qt::LeftButton) {
     preview_object_ = nullptr;
     is_creating_ = false;
     update();
+    updateCursor();
     return;
   }
 
   update();
+  updateCursor();
 }

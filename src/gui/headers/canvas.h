@@ -20,6 +20,7 @@ class Canvas : public QWidget {
   void Redo();
 
  public:
+  bool edit_font_;
   explicit Canvas(Diagram& diagram, QWidget* parent = nullptr);
 
   // Tool and property setters/getters
@@ -61,6 +62,8 @@ class Canvas : public QWidget {
 
   // Keyboard interaction (Delete key)
   void keyPressEvent(QKeyEvent* event) override;
+
+  void updateCursor();
 
  private:
   Diagram& diagram_;                 // Model (not owned)

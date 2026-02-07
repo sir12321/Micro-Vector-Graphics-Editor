@@ -38,4 +38,7 @@ void Canvas::SetActiveFontFamily(const QFont& font) {
   active_font_family_ = std::string(font.family().toUtf8().constData());
 }
 
-void Canvas::SetActiveTool(Tool tool) { active_tool_ = tool; }
+void Canvas::SetActiveTool(Tool tool) {
+  active_tool_ = tool;
+  updateCursor();
+}

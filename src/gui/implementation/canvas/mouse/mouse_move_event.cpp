@@ -70,4 +70,6 @@ void Canvas::mouseMoveEvent(QMouseEvent* event) {
       return;
     }
   }
+
+  updateCursor();
 }

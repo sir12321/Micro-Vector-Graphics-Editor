@@ -27,6 +27,9 @@ class TextObject : public GraphicsObject {
   // Replaces text content.
   void SetText(const std::string& text);
 
+  // Sets font size.
+  void SetFontSize(int size);
+
   // Toggles the editing cursor.
   void SetEditing(bool editing);
 

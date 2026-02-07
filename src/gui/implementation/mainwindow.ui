@@ -575,14 +575,14 @@
          <widget class="QLabel" name="label_2">
           <property name="minimumSize">
            <size>
-            <width>30</width>
-            <height>0</height>
+            <width>25</width>
+            <height>25</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>30</width>
-            <height>16777215</height>
+            <width>25</width>
+            <height>25</height>
            </size>
           </property>
           <property name="font">
@@ -591,7 +591,13 @@
            </font>
           </property>
           <property name="text">
-           <string>✏ </string>
+           <string/>
+          </property>
+          <property name="pixmap">
+           <pixmap resource="../../../resources/icons.qrc">:/icons/icons/marker.png</pixmap>
+          </property>
+          <property name="scaledContents">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -1150,28 +1156,53 @@
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_9">
         <item>
-         <widget class="QSpinBox" name="fontSizeSpinBox">
-          <property name="minimumSize">
-           <size>
-            <width>50</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>50</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="minimum">
-           <number>6</number>
-          </property>
-          <property name="maximum">
-           <number>72</number>
-          </property>
-          <property name="value">
-           <number>9</number>
-          </property>
+         <widget class="QWidget" name="widget_18" native="true">
+          <layout class="QHBoxLayout" name="horizontalLayout_11">
+           <item>
+            <widget class="QSpinBox" name="fontSizeSpinBox">
+             <property name="minimumSize">
+              <size>
+               <width>50</width>
+               <height>22</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>50</width>
+               <height>22</height>
+              </size>
+             </property>
+             <property name="minimum">
+              <number>6</number>
+             </property>
+             <property name="maximum">
+              <number>72</number>
+             </property>
+             <property name="value">
+              <number>9</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="checkBox">
+             <property name="minimumSize">
+              <size>
+               <width>18</width>
+               <height>22</height>
+              </size>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>22</width>
+               <height>22</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
         <item>
@@ -1530,7 +1561,7 @@
    </property>
    <property name="icon">
     <iconset resource="../../../resources/icons.qrc">
-     <normaloff>:/icons/icons/spray.png</normaloff>:/icons/icons/spray.png</iconset>
+     <normaloff>:/icons/icons/fill.png</normaloff>:/icons/icons/fill.png</iconset>
    </property>
    <property name="text">
     <string>fill</string>
