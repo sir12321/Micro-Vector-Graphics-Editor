@@ -10,11 +10,11 @@ A lightweight vector graphics editor built with C++17 and the Qt5 framework. Thi
   - Hexagons
   - Lines
 - **Freehand Drawing**: Sketch freely on the canvas.
-- **Text Support**: Add text annotations with font and size customization.
+- **Text Support**: Add text annotations with font family and size customization. Double-click to edit existing text.
 - **Object Manipulation**:
   - **Move**: Drag shapes around the canvas.
   - **Resize**: Interactive resizing handles for shapes.
-  - **Delete**: Remove selected objects.
+  - **Delete**: Remove selected objects (Delete key).
 - **Clipboard & History**:
   - **Undo/Redo**: Full history support to revert and re-apply changes.
   - **Cut, Copy, Paste**: Standard clipboard operations for shapes.
@@ -93,4 +93,6 @@ The source code is organized as follows:
 
 ## Authors
 
-- Designed as part of the COP290 Design Practices course.
+- **cs1240351@iitd.ac.in**
+
+
