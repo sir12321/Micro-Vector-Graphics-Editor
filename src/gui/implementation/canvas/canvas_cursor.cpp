@@ -1,7 +1,3 @@
-#include <QCursor>
-#include <QMouseEvent>
-#include <QPixmap>
-
 #include "../../headers/canvas.h"
 
 void Canvas::updateCursor() {

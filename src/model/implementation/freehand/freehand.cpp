@@ -1,13 +1,6 @@
 #include "../../headers/freehand.h"
 
-#include <QColor>
-#include <QPainterPath>
-#include <QPen>
-#include <sstream>
-
-using namespace std;
-
-// Constructs an empty Freehand object.
+// Constructs an empty Freehand object
 Freehand::Freehand() {
   id_ = "freehand";
   bbox_x_ = 0;
@@ -16,7 +9,7 @@ Freehand::Freehand() {
   bbox_height_ = 0;
 }
 
-// Adds a point to the path.
+// Adds a point to the path
 void Freehand::AddPoint(const QPointF& p) {
   points_.push_back(p);
 
@@ -44,7 +37,7 @@ void Freehand::AddPoint(const QPointF& p) {
   bbox_height_ = max_y - min_y;
 }
 
-// Draws the path.
+// Draws the path
 void Freehand::Draw(QPainter& painter) const {
   if (points_.size() < 2) return;
 
@@ -58,14 +51,13 @@ void Freehand::Draw(QPainter& painter) const {
 
   QPainterPath path;
   path.moveTo(points_[0]);
-  for (size_t i = 1; i < points_.size(); ++i) {
+  for (std::size_t i = 1; i < points_.size(); ++i) {
     path.lineTo(points_[i]);
   }
 
   painter.drawPath(path);
 }
 
-// Moves the path.
 void Freehand::Move(double dx, double dy) {
   for (auto& p : points_) {
     p += QPointF(dx, dy);
@@ -79,12 +71,10 @@ void Freehand::set_points(const std::vector<QPointF>& points) {
   points_ = points;
 }
 
-// Sets geometric properties (Unused).
 void Freehand::SetGeometry(double x, double y, double w, double h,
                            double rounded_rect_radius, double end_x,
                            double end_y) {}
 
-// Creates a deep copy.
 std::unique_ptr<GraphicsObject> Freehand::Clone() const {
   auto f = std::make_unique<Freehand>(*this);
   f->set_points(points_);

@@ -1,11 +1,5 @@
-#include <QColorDialog>
-#include <QVBoxLayout>
-
-#include "../../headers/canvas.h"
 #include "../../headers/mainwindow.h"
-#include "../ui_mainwindow.h"
 
-// Sets up the initial UI state.
 void MainWindow::initialise() {
   QString defaultFill_1 = "#00000000";  // transparent
   QString defaultFill_2 = "#00000000";  // transparent

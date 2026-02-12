@@ -1,12 +1,6 @@
 #include "../../headers/hexagon.h"
 
-#include <cmath>
-#include <iostream>
-#include <sstream>
-
-using namespace std;
-
-// Constructor.
+// Constructor
 Hexagon::Hexagon(double cx, double cy, double x, double y, int stroke_width)
     : cx_(cx), cy_(cy), x_(x), y_(y) {
   id_ = "hexagon";
@@ -18,7 +12,7 @@ Hexagon::Hexagon(double cx, double cy, double x, double y, int stroke_width)
   bbox_height_ = 2 * (r + stroke_width_);
 }
 
-// Draws a regular hexagon.
+// Draws a regular hexagon
 void Hexagon::Draw(QPainter& painter) const {
   QPen pen(QColor(QString::fromStdString(stroke_color_)));
   pen.setWidth(stroke_width_);
@@ -40,7 +34,7 @@ void Hexagon::Draw(QPainter& painter) const {
   painter.drawPolygon(polygon);
 }
 
-// Moves the hexagon.
+// Moves the hexagon
 void Hexagon::Move(double dx, double dy) {
   x_ += dx;
   y_ += dy;
@@ -50,7 +44,7 @@ void Hexagon::Move(double dx, double dy) {
   bbox_y_ += dy;
 }
 
-// Updates geometry.
+// Updates geometry
 void Hexagon::SetGeometry(double x, double y, double w, double h,
                           double rounded_rect_radius, double end_x,
                           double end_y) {

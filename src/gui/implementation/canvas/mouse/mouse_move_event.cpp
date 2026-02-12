@@ -1,6 +1,3 @@
-#include <QMouseEvent>
-
-#include "../../../../model/shape_factory/shape_factory.h"
 #include "../../../headers/canvas.h"
 
 // Handles mouse movement for resizing, creating, and moving objects
@@ -16,7 +13,7 @@ void Canvas::mouseMoveEvent(QMouseEvent* event) {
     update();
     return;
   }
-  
+
   // Handle freehand drawing path updates
   if (is_drawing_freehand_ && current_freehand_) {
     current_freehand_->AddPoint(event->pos());
@@ -28,7 +25,6 @@ void Canvas::mouseMoveEvent(QMouseEvent* event) {
   if (is_creating_ && preview_object_) {
     QPoint end = event->pos();
     double x, y, w, h;
-
 
     if (active_tool_ == Tool::Rectangle ||
         active_tool_ == Tool::RoundedRectangle) {

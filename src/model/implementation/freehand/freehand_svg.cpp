@@ -5,87 +5,77 @@
 
 #include "../../headers/freehand.h"
 
-using namespace std;
-
-// Exports to SVG.
+// Exports to SVG
 std::string Freehand::ToSvg() const {
-  // A single point has no visible stroke in SVG; skip.
   if (points_.size() < 2) return "";
 
   // Start path
   std::string d = "M " + std::to_string(points_[0].x()) + " " +
                   std::to_string(points_[0].y());
   // Line to subsequent points
-  for (size_t i = 1; i < points_.size(); ++i) {
+  for (std::size_t i = 1; i < points_.size(); ++i) {
     d += " L " + std::to_string(points_[i].x()) + " " +
          std::to_string(points_[i].y());
   }
 
   // Match drawing style: no fill, round caps/joins
-  return "<path d=\"" + d + "\" fill=\"none\" stroke=\"" + stroke_color_ +
-         "\" stroke-width=\"" + std::to_string(stroke_width_) +
-         "\" stroke-linecap=\"round\" stroke-linejoin=\"round\" />\n";
+  return "<path\n\td=\"" + d + "\"\n\tfill=\"none\"\n\tstroke=\"" +
+         stroke_color_ + "\"\n\tstroke-width=\"" +
+         std::to_string(stroke_width_) +
+         "\"\n\tstroke-linecap=\"round\"\n\tstroke-linejoin=\"round\" />\n";
 }
 
-// Helper.
-vector<std::string> split_by_space_freehand(const std::string& s) {
-  vector<std::string> result;
-  std::string current;
-  for (char c : s) {
-    if (c == ' ') {
-      result.push_back(current);
-      current.clear();
-    } else {
-      current += c;
+// Helper for parsing SVG attributes
+std::string get_attr_freehand(const std::string& svg, const std::string& attr) {
+  std::size_t pos = svg.find(attr + "=\"");
+  if (pos != std::string::npos) {
+    std::size_t start = pos + attr.length() + 2;
+    std::size_t end = svg.find("\"", start);
+    if (end != std::string::npos) return svg.substr(start, end - start);
+  }
+  // Try style attribute
+  std::size_t style_pos = svg.find("style=\"");
+  if (style_pos != std::string::npos) {
+    std::size_t style_start = style_pos + 7;
+    std::size_t style_end = svg.find("\"", style_start);
+    if (style_end != std::string::npos) {
+      std::string style = svg.substr(style_start, style_end - style_start);
+      std::size_t attr_pos = style.find(attr + ":");
+      if (attr_pos != std::string::npos) {
+        std::size_t val_start = attr_pos + attr.length() + 1;
+        std::size_t val_end = style.find(";", val_start);
+        if (val_end == std::string::npos) val_end = style.length();
+        return style.substr(val_start, val_end - val_start);
+      }
     }
   }
-  if (!current.empty()) {
-    result.push_back(current);
-  }
-  return result;
+  return "";
 }
 
-// Imports from SVG.
+// Imports from SVG
 std::unique_ptr<GraphicsObject> Freehand::FromSvg(const std::string& svg) {
   int stroke_width = 0;
   std::string stroke_color = "black";
   std::vector<QPointF> points;
 
-  // Parse stroke-width first
-  size_t sw_pos = svg.find("stroke-width=\"");
-  if (sw_pos != std::string::npos) {
-    try {
-      size_t sw_end = svg.find("\"", sw_pos + 14);
-      stroke_width = std::stoi(svg.substr(sw_pos + 14, sw_end - (sw_pos + 14)));
-    } catch (...) {
-    }
-  }
-
-  // Parse stroke color
-  size_t stroke_pos = svg.find("stroke=\"");
-  if (stroke_pos != std::string::npos) {
-    try {
-      size_t stroke_end = svg.find("\"", stroke_pos + 8);
-      stroke_color = svg.substr(stroke_pos + 8, stroke_end - (stroke_pos + 8));
-    } catch (...) {
-    }
-  }
+  std::string val;
+  if (!(val = get_attr_freehand(svg, "stroke-width")).empty())
+    stroke_width = std::stoi(val);
+  if (!(val = get_attr_freehand(svg, "stroke")).empty()) stroke_color = val;
 
   // Parse path data - find d="..." and extract everything between quotes
-  size_t d_pos = svg.find("d=\"");
+  std::size_t d_pos = svg.find("d=\"");
   if (d_pos != std::string::npos) {
-    size_t d_start = d_pos + 3;
-    size_t d_end = svg.find("\"", d_start);
+    std::size_t d_start = d_pos + 3;
+    std::size_t d_end = svg.find("\"", d_start);
     if (d_end != std::string::npos) {
       std::string d_str = svg.substr(d_start, d_end - d_start);
-
-      // Parse path data: M x y L x y L x y ...
       std::stringstream ss(d_str);
       char cmd;
       double x, y;
 
       while (ss >> cmd) {
-        if (cmd == 'M' || cmd == 'L') {
+        if (cmd == 'M' || cmd == 'L' || cmd == 'm' || cmd == 'l') {
           if (ss >> x >> y) {
             points.push_back(QPointF(x, y));
           }

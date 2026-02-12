@@ -1,18 +1,6 @@
 #include "shape_factory.h"
 
-#include <algorithm>
-#include <cmath>
-#include <memory>
-#include <string>
-
-#include "../headers/circle.h"
-#include "../headers/hexagon.h"
-#include "../headers/line.h"
-#include "../headers/rectangle.h"
-#include "../headers/rounded_rectangle.h"
-#include "../headers/text.h"
-
-// Creates a shape based on the tool and parameters.
+// Creates a shape based on the tool and parameters
 std::unique_ptr<GraphicsObject> CreateShape(
     Tool tool, const QPoint& start, const QPoint& end,
     const std::string& fill_color, const std::string& stroke_color,

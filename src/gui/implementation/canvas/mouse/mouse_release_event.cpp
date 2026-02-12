@@ -1,16 +1,14 @@
-#include <QMouseEvent>
-
-#include "../../../../model/shape_factory/shape_factory.h"
 #include "../../../headers/canvas.h"
 
 // Handles finishing operations (resizing, drawing, creation) on mouse release
 void Canvas::mouseReleaseEvent(QMouseEvent* event) {
-  // Reset resize flags
+  // Reset resize
   if (is_resize1_ || is_resize2_) {
     is_resize1_ = false;
     is_resize2_ = false;
     update();
   }
+
   // Finish freehand drawing
   if (is_drawing_freehand_ && event->button() == Qt::LeftButton) {
     current_freehand_ = nullptr;

@@ -1,13 +1,22 @@
 #ifndef SRC_GUI_MAINWINDOW_H
 #define SRC_GUI_MAINWINDOW_H
 
+#include <QColorDialog>
+#include <QFileDialog>
 #include <QFontComboBox>
 #include <QMainWindow>
+#include <QMessageBox>
+#include <QVBoxLayout>
+#include <fstream>
+#include <sstream>
 
 #include "../../diagram/diagram.h"
+#include "../headers/canvas.h"
+#include "../implementation/ui_mainwindow.h"
 #include "canvas.h"
 #include "tools.h"
 
+// used to include designer files (.ui)
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -75,7 +84,7 @@ class MainWindow : public QMainWindow {
   // Helper to check for unsaved changes before closing/opening
   bool MaybeSave();
 
-  Ui::MainWindow *ui_;
+  Ui::MainWindow *ui_;  // connects ui interface to main window
   Diagram diagram_;
   Canvas *canvas_;
   QString current_file_;

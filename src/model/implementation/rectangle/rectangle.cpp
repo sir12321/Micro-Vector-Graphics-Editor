@@ -1,8 +1,5 @@
 #include "../../headers/rectangle.h"
 
-using namespace std;
-
-// Constructor.
 Rectangle::Rectangle(double cx, double cy, double width, double height,
                      int stroke_width)
     : cx_(cx),
@@ -13,14 +10,14 @@ Rectangle::Rectangle(double cx, double cy, double width, double height,
       endy_(cy + height / 2.0) {
   id_ = "rectangle";
   SetStrokeWidth(stroke_width);
-  // Calculate bounding box.
+  // Calculate bounding box
   bbox_x_ = cx_ - width_ / 2.0 - stroke_width_;
   bbox_y_ = cy_ - height_ / 2.0 - stroke_width_;
   bbox_width_ = width_ + stroke_width_ * 2;
   bbox_height_ = height_ + stroke_width_ * 2;
 }
 
-// Draws the rectangle.
+// Draws the rectangle
 void Rectangle::Draw(QPainter& painter) const {
   QPen pen(QColor(QString::fromStdString(stroke_color_)));
   pen.setWidth(stroke_width_);
@@ -31,7 +28,7 @@ void Rectangle::Draw(QPainter& painter) const {
   painter.drawRect(cx_ - width_ / 2.0, cy_ - height_ / 2.0, width_, height_);
 }
 
-// Updates geometry.
+// Updates geometry
 void Rectangle::SetGeometry(double x, double y, double w, double h,
                             double rounded_rect_radius, double end_x,
                             double end_y) {
@@ -48,7 +45,7 @@ void Rectangle::SetGeometry(double x, double y, double w, double h,
   endy_ = end_y;
 }
 
-// Moves the rectangle.
+// Moves the rectangle
 void Rectangle::Move(double dx, double dy) {
   cx_ += dx;
   cy_ += dy;

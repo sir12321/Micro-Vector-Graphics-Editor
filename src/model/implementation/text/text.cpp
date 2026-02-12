@@ -1,10 +1,7 @@
 #include "../../headers/text.h"
 
-using namespace std;
-
-// Constructor.
-TextObject::TextObject(double x, double y, const string& text, int font_size,
-                       const string& font_family)
+TextObject::TextObject(double x, double y, const std::string& text,
+                       int font_size, const std::string& font_family)
     : x_(x),
       y_(y),
       text_(text),
@@ -15,14 +12,14 @@ TextObject::TextObject(double x, double y, const string& text, int font_size,
   stroke_width_ = 0;
   bbox_x_ = x_ - 6;
   bbox_y_ = y_ - 6;
-  bbox_width_ = (text_.length()) * font_size_ + 18;  // rough width heuristic
+  bbox_width_ = (text_.length()) * font_size_ + 18;
   bbox_height_ = font_size_ + 30;
 }
 
-// Appends character.
+// Appends character
 void TextObject::AppendChar(char c) { text_ += c; }
 
-// Removes last character.
+// Removes last character
 void TextObject::Backspace() {
   if (!text_.empty()) {
     text_.pop_back();
@@ -31,10 +28,10 @@ void TextObject::Backspace() {
 
 void TextObject::SetText(const std::string& text) { text_ = text; }
 
-// Controls cursor visibility.
+// Controls cursor visibility
 void TextObject::SetEditing(bool editing) { show_cursor_ = editing; }
 
-// Draws the text.
+// Draws the text
 void TextObject::Draw(QPainter& painter) const {
   QFont font;
   font.setPointSize(font_size_);
@@ -73,7 +70,7 @@ void TextObject::Draw(QPainter& painter) const {
   }
 }
 
-// Moves the text.
+// Moves the text
 void TextObject::Move(double dx, double dy) {
   x_ += dx;
   y_ += dy;

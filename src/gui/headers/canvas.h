@@ -1,27 +1,40 @@
 #ifndef SRC_UI_HEADERS_CANVAS_H_
 #define SRC_UI_HEADERS_CANVAS_H_
 
+#include <QCursor>
+#include <QKeyEvent>
+#include <QMouseEvent>
+#include <QPainter>
+#include <QPixmap>  // for cursor images
 #include <QPoint>
-#include <QWidget>
+#include <QWidget>  // for event handling and layout integration
 
 #include "../../diagram/diagram.h"
 #include "../../model/headers/freehand.h"
 #include "../../model/headers/graphics_object.h"
 #include "../../model/headers/text.h"
+#include "../../model/shape_factory/shape_factory.h"
 #include "tools.h"
 
 // Main drawing widget handling rendering and user interaction
 class Canvas : public QWidget {
+  // used to declare undo and redo as public slots, imp or else undo function
+  // can't be converted into signal
   Q_OBJECT
-
- public slots:
+ public slots:  // A slot is a function that can be connected to a signal (like
+                // a button click or a menu action). When the signal is emitted,
+                // the connected slot is executed.
   // Undo/Redo operations
   void Undo();
   void Redo();
 
  public:
   bool edit_font_;
-  explicit Canvas(Diagram& diagram, QWidget* parent = nullptr);
+  explicit Canvas(
+      Diagram& diagram,
+      QWidget* parent = nullptr);  // explicit here so that the code wouldn't
+                                   // create hidden canvas, calls the
+                                   // constructor only when i call it explicitly
 
   // Tool and property setters/getters
   void SetActiveTool(Tool tool);
@@ -29,10 +42,10 @@ class Canvas : public QWidget {
   void SetActiveStrokeColor(const std::string& color);
   void SetActiveStrokeWidth(int width);
   void SetActiveFontFamily(const QFont& font);
-  int GetActiveStrokeWidth() const;
   void SetRoundedRectRadius(double radius);
-  double GetRoundedRectRadius() const;
   void SetTextFontSize(int size);
+  int GetActiveStrokeWidth() const;
+  double GetRoundedRectRadius() const;
   int GetTextFontSize() const;
   std::string GetActiveFillColor() const;
   std::string GetActiveStrokeColor() const;
@@ -42,9 +55,11 @@ class Canvas : public QWidget {
   void CutSelected();
   void Paste();
 
-  // Serialization and history reset
+  // SVG
   std::string ExportSvg() const;
   void ImportSvg(const std::string& svg);
+
+  // Reset stacks
   void UndoRedoReset();
 
  protected:
@@ -60,14 +75,14 @@ class Canvas : public QWidget {
   void mouseDoubleClickEvent(QMouseEvent* event) override;
   GraphicsObject* GetObjectAt(const QPoint& pos);
 
-  // Keyboard interaction (Delete key)
+  // Keyboard interactions
   void keyPressEvent(QKeyEvent* event) override;
 
   void updateCursor();
 
  private:
-  Diagram& diagram_;                 // Model (not owned)
-  GraphicsObject* selected_object_;  // Non-owning pointer
+  Diagram& diagram_;
+  GraphicsObject* selected_object_;
   GraphicsObject* dragging_object_;
   GraphicsObject* preview_object_;
   std::unique_ptr<GraphicsObject> clipboard_;

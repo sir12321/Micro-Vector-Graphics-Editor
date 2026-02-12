@@ -1,10 +1,7 @@
-#include <QKeyEvent>
-
 #include "../../headers/canvas.h"
 
-// Handles keyboard events for deletion and text entry
 void Canvas::keyPressEvent(QKeyEvent* event) {
-  // ---- Global shortcuts ----
+  // Global shortcuts
   if (event->key() == Qt::Key_Delete) {
     // Don't delete while actively dragging or editing text
     if (!dragging_object_ && !is_typing_text_) {
@@ -15,13 +12,13 @@ void Canvas::keyPressEvent(QKeyEvent* event) {
     return;
   }
 
-  // ---- Text editing mode only ----
+  // Text editing mode only
   if (!is_typing_text_ || !editing_text_) {
     QWidget::keyPressEvent(event);
     return;
   }
 
-  // ---- Finish text editing ----
+  // Finish text editing
   if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) {
     is_typing_text_ = false;
     editing_text_->SetEditing(false);
@@ -30,14 +27,14 @@ void Canvas::keyPressEvent(QKeyEvent* event) {
     return;
   }
 
-  // ---- Backspace ----
+  // Backspace
   if (event->key() == Qt::Key_Backspace) {
     editing_text_->Backspace();
     update();
     return;
   }
 
-  // ---- Regular character input ----
+  // Regular character input
   QString text = event->text();
   if (!text.isEmpty()) {
     editing_text_->AppendChar(text[0].toLatin1());
@@ -64,7 +61,7 @@ void Canvas::Paste() {
   if (!clipboard_) return;
   PushUndoState();
   auto obj = clipboard_->Clone();
-  obj->Move(20, 20);  // offset so user sees it
+  obj->Move(20, 20);
   diagram_.AddObject(std::move(obj));
   update();
 }

@@ -1,8 +1,4 @@
-#include <QVBoxLayout>
-
-#include "../../headers/canvas.h"
 #include "../../headers/mainwindow.h"
-#include "../ui_mainwindow.h"
 
 void MainWindow::ToggleTool(Tool tool, QAction* action) {
   if (active_tool_ == tool) {

@@ -1,8 +1,6 @@
-#include <QKeyEvent>
-#include <QMouseEvent>
-
 #include "../../headers/canvas.h"
 
+// Initialize canvas with default drawing settings
 Canvas::Canvas(Diagram& diagram, QWidget* parent)
     : QWidget(parent),
       diagram_(diagram),
@@ -29,6 +27,7 @@ Canvas::Canvas(Diagram& diagram, QWidget* parent)
   setMouseTracking(true);
 }
 
+// Check if a point is within an object's bounding box
 bool Canvas::IsPointInsideBoundingBox(GraphicsObject* obj,
                                       const QPoint& point) const {
   double x = obj->BboxX() - 5;
@@ -40,6 +39,7 @@ bool Canvas::IsPointInsideBoundingBox(GraphicsObject* obj,
          point.y() <= y + h;
 }
 
+// Check if a point is near the start handle for resizing
 bool Canvas::IsPointInsideResizeStart(GraphicsObject* obj,
                                       const QPoint& point) const {
   double x = obj->GetStart().first - 10;
@@ -50,6 +50,7 @@ bool Canvas::IsPointInsideResizeStart(GraphicsObject* obj,
   return point.x() >= x && point.x() <= x + w && point.y() >= y &&
          point.y() <= y + h;
 }
+// Check if a point is near the end handle for resizing
 
 bool Canvas::IsPointInsideResizeEnd(GraphicsObject* obj,
                                     const QPoint& point) const {
@@ -62,10 +63,11 @@ bool Canvas::IsPointInsideResizeEnd(GraphicsObject* obj,
          point.y() <= y + h;
 }
 
+// Remove the currently selected object from the diagram
 void Canvas::DeleteSelectedObject() {
   if (!selected_object_) return;
 
-  for (size_t i = 0; i < diagram_.size(); ++i) {
+  for (std::size_t i = 0; i < diagram_.size(); ++i) {
     if (diagram_.objects()[i].get() == selected_object_) {
       if (editing_text_ == selected_object_) {
         editing_text_ = nullptr;
@@ -84,52 +86,11 @@ void Canvas::DeleteSelectedObject() {
   }
 }
 
+// Get the diagram as an SVG string
 std::string Canvas::ExportSvg() const { return diagram_.ToSvg(); }
 
+// Replace diagram with objects parsed from SVG string
 void Canvas::ImportSvg(const std::string& svg) {
   diagram_.FromSvg(svg);
   update();
-}
-
-void Canvas::UndoRedoReset() {
-  undo_stack_.clear();
-  redo_stack_.clear();
-}
-
-void Canvas::PushUndoState() {
-  std::string svg = diagram_.ToSvg();
-  if (!undo_stack_.empty() && undo_stack_.back() == svg) {
-    return;  // Avoid pushing duplicate states
-  }
-  undo_stack_.push_back(svg);
-  redo_stack_.clear();
-
-  constexpr int MAX_UNDO = 50;
-  if (undo_stack_.size() > MAX_UNDO) {
-    undo_stack_.erase(undo_stack_.begin());
-  }
-}
-
-void Canvas::Undo() {
-  if (undo_stack_.empty()) return;
-  redo_stack_.push_back(diagram_.ToSvg());
-  diagram_.Clear();
-  diagram_.FromSvg(undo_stack_.back());
-  undo_stack_.pop_back();
-
-  selected_object_ = nullptr;
-  update();
-  updateCursor();
-}
-
-void Canvas::Redo() {
-  if (redo_stack_.empty()) return;
-  undo_stack_.push_back(diagram_.ToSvg());
-  diagram_.Clear();
-  diagram_.FromSvg(redo_stack_.back());
-  redo_stack_.pop_back();
-
-  selected_object_ = nullptr;
-  update();
-  updateCursor();
 }

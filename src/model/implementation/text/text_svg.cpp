@@ -1,82 +1,71 @@
 #include "../../headers/text.h"
 
-using namespace std;
-
-// Exports to SVG.
-string TextObject::ToSvg() const {
-  return "<text x=\"" + to_string(x_) + "\" y=\"" + to_string(y_) +
-         "\" stroke-fill=\"" + stroke_color_ + "\" fill=\"" + fill_color_ +
-         "\" font-size=\"" + to_string(font_size_) + "\" font-family=\"" +
-         font_family_ + "\">" + text_ + "</text>\n";
+// Exports to SVG
+std::string TextObject::ToSvg() const {
+  return "<text\n\tx=\"" + std::to_string(x_) + "\"\n\ty=\"" +
+         std::to_string(y_) + "\"\n\tstroke=\"" + stroke_color_ +
+         "\"\n\tfill=\"" + fill_color_ + "\"\n\tfont-size=\"" +
+         std::to_string(font_size_) + "\"\n\tfont-family=\"" + font_family_ +
+         "\">" + text_ + "</text>\n";
 }
 
-// Helper to split text by spaces.
-vector<std::string> split_by_space_text(const std::string& s) {
-  vector<std::string> result;
-  std::string current;
-  for (char c : s) {
-    if (c == ' ') {
-      result.push_back(current);
-      current.clear();
-    } else {
-      current += c;
+// Helper to extract attribute values
+std::string get_attr_text(const std::string& svg, const std::string& attr) {
+  std::size_t pos = svg.find(attr + "=\"");
+  if (pos != std::string::npos) {
+    std::size_t start = pos + attr.length() + 2;
+    std::size_t end = svg.find("\"", start);
+    if (end != std::string::npos) return svg.substr(start, end - start);
+  }
+  // Try style attribute
+  std::size_t style_pos = svg.find("style=\"");
+  if (style_pos != std::string::npos) {
+    std::size_t style_start = style_pos + 7;
+    std::size_t style_end = svg.find("\"", style_start);
+    if (style_end != std::string::npos) {
+      std::string style = svg.substr(style_start, style_end - style_start);
+      std::size_t attr_pos = style.find(attr + ":");
+      if (attr_pos != std::string::npos) {
+        std::size_t val_start = attr_pos + attr.length() + 1;
+        std::size_t val_end = style.find(";", val_start);
+        if (val_end == std::string::npos) val_end = style.length();
+        return style.substr(val_start, val_end - val_start);
+      }
     }
   }
-  if (!current.empty()) {
-    result.push_back(current);
-  }
-  return result;
+  return "";
 }
 
-// Imports from SVG.
+// Imports from SVG
 std::unique_ptr<GraphicsObject> TextObject::FromSvg(const std::string& svg) {
   double x = 0, y = 0;
   int font_size = 12;
   std::string text, fill_color = "black", font_family = "Deja Vu Sans",
                     stroke_color = "black";
-  vector<std::string> parts = split_by_space_text(svg);
 
-  for (const std::string& part : parts) {
-    try {
-      // Check complex attributes first to avoid substring matches
-      if (part.find("font-family=\"") != std::string::npos) {
-        font_family =
-            part.substr(part.find("font-family=\"") + 13,
-                        part.find("\"", part.find("font-family=\"") + 13) -
-                            (part.find("font-family=\"") + 13));
-      } else if (part.find("font-size=\"") != std::string::npos) {
-        font_size = std::stoi(
-            part.substr(part.find("font-size=\"") + 11,
-                        part.find("\"", part.find("font-size=\"") + 11) -
-                            (part.find("font-size=\"") + 11)));
-      } else if (part.find("stroke-fill=\"") != std::string::npos) {
-        stroke_color =
-            part.substr(part.find("stroke-fill=\"") + 13,
-                        part.find("\"", part.find("stroke-fill=\"") + 13) -
-                            (part.find("stroke-fill=\"") + 13));
-      } else if (part.find("fill=\"") != std::string::npos) {
-        fill_color = part.substr(part.find("fill=\"") + 6,
-                                 part.find("\"", part.find("fill=\"") + 6) -
-                                     (part.find("fill=\"") + 6));
-      } else if (part.find("x=\"") != std::string::npos) {
-        x = std::stod(part.substr(
-            part.find("x=\"") + 3,
-            part.find("\"", part.find("x=\"") + 3) - (part.find("x=\"") + 3)));
-      } else if (part.find("y=\"") != std::string::npos) {
-        y = std::stod(part.substr(
-            part.find("y=\"") + 3,
-            part.find("\"", part.find("y=\"") + 3) - (part.find("y=\"") + 3)));
-      }
-    } catch (...) {
-      // Skip invalid attributes
-    }
-  }
+  std::string val;
+  if (!(val = get_attr_text(svg, "x")).empty()) x = std::stod(val);
+  if (!(val = get_attr_text(svg, "y")).empty()) y = std::stod(val);
+  if (!(val = get_attr_text(svg, "font-size")).empty())
+    font_size = std::stoi(val);
+  if (!(val = get_attr_text(svg, "font-family")).empty()) font_family = val;
+  if (!(val = get_attr_text(svg, "fill")).empty()) fill_color = val;
+  if (!(val = get_attr_text(svg, "stroke")).empty()) stroke_color = val;
 
   // Extract text content between > and </text>
-  size_t start = svg.find('>');
-  size_t end = svg.find("</text>");
-  if (start != std::string::npos && end != std::string::npos && start < end) {
-    text = svg.substr(start + 1, end - start - 1);
+  std::size_t tag_end = svg.find('>');
+  std::size_t closing_tag = svg.find("</text>");
+  if (tag_end != std::string::npos && closing_tag != std::string::npos &&
+      tag_end < closing_tag) {
+    text = svg.substr(tag_end + 1, closing_tag - tag_end - 1);
+    std::size_t tspan = text.find("<tspan");
+    if (tspan != std::string::npos) {
+      std::size_t tspan_end = text.find(">", tspan);
+      std::size_t tspan_close = text.find("</tspan>", tspan_end);
+      if (tspan_end != std::string::npos && tspan_close != std::string::npos) {
+        text = text.substr(tspan_end + 1, tspan_close - tspan_end - 1);
+      }
+    }
   }
 
   auto obj = std::make_unique<TextObject>(x, y, text, font_size, font_family);

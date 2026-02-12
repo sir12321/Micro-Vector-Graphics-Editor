@@ -1431,7 +1431,7 @@
   </action>
   <action name="actionNew">
    <property name="checkable">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="icon">
     <iconset resource="../../../resources/icons.qrc">
@@ -1446,7 +1446,7 @@
   </action>
   <action name="actionOpen">
    <property name="checkable">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="icon">
     <iconset resource="../../../resources/icons.qrc">

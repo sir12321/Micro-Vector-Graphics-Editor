@@ -1,22 +1,17 @@
 #include "../../headers/line.h"
 
-#include <algorithm>
-
-using namespace std;
-
-// Constructor.
 Line::Line(double x1, double y1, double x2, double y2, int stroke_width)
     : x1_(x1), y1_(y1), x2_(x2), y2_(y2) {
   id_ = "line";
   SetStrokeWidth(stroke_width);
-  // Calculate bounding box.
-  bbox_x_ = min(x1_, x2_) - stroke_width_;
-  bbox_y_ = min(y1_, y2_) - stroke_width_;
-  bbox_width_ = abs(x2_ - x1_) + stroke_width_ * 2;
-  bbox_height_ = abs(y2_ - y1_) + stroke_width_ * 2;
+  // Calculate bounding box
+  bbox_x_ = std::min(x1_, x2_) - stroke_width_;
+  bbox_y_ = std::min(y1_, y2_) - stroke_width_;
+  bbox_width_ = std::abs(x2_ - x1_) + stroke_width_ * 2;
+  bbox_height_ = std::abs(y2_ - y1_) + stroke_width_ * 2;
 }
 
-// Draws the line.
+// Draws the line
 void Line::Draw(QPainter& painter) const {
   QPen pen(QColor(QString::fromStdString(stroke_color_)));
   pen.setWidth(stroke_width_);
@@ -25,19 +20,19 @@ void Line::Draw(QPainter& painter) const {
   painter.drawLine(x1_, y1_, x2_, y2_);
 }
 
-// Updates geometry.
+// Updates geometry
 void Line::SetGeometry(double x, double y, double w, double h,
                        double rounded_rect_radius, double end_x, double end_y) {
   x2_ = end_x;
   y2_ = end_y;
 
-  bbox_x_ = min(x1_, x2_) - stroke_width_;
-  bbox_y_ = min(y1_, y2_) - stroke_width_;
-  bbox_width_ = abs(x2_ - x1_) + stroke_width_ * 2;
-  bbox_height_ = abs(y2_ - y1_) + stroke_width_ * 2;
+  bbox_x_ = std::min(x1_, x2_) - stroke_width_;
+  bbox_y_ = std::min(y1_, y2_) - stroke_width_;
+  bbox_width_ = std::abs(x2_ - x1_) + stroke_width_ * 2;
+  bbox_height_ = std::abs(y2_ - y1_) + stroke_width_ * 2;
 }
 
-// Moves the line.
+// Moves the line
 void Line::Move(double dx, double dy) {
   x1_ += dx;
   y1_ += dy;
@@ -59,20 +54,20 @@ void Line::MoveStart(double x, double y) {
   x1_ = x;
   y1_ = y;
 
-  bbox_x_ = min(x1_, x2_) - stroke_width_;
-  bbox_y_ = min(y1_, y2_) - stroke_width_;
-  bbox_width_ = abs(x2_ - x1_) + stroke_width_ * 2;
-  bbox_height_ = abs(y2_ - y1_) + stroke_width_ * 2;
+  bbox_x_ = std::min(x1_, x2_) - stroke_width_;
+  bbox_y_ = std::min(y1_, y2_) - stroke_width_;
+  bbox_width_ = std::abs(x2_ - x1_) + stroke_width_ * 2;
+  bbox_height_ = std::abs(y2_ - y1_) + stroke_width_ * 2;
 }
 
 void Line::MoveEnd(double x, double y) {
   x2_ = x;
   y2_ = y;
 
-  bbox_x_ = min(x1_, x2_) - stroke_width_;
-  bbox_y_ = min(y1_, y2_) - stroke_width_;
-  bbox_width_ = abs(x2_ - x1_) + stroke_width_ * 2;
-  bbox_height_ = abs(y2_ - y1_) + stroke_width_ * 2;
+  bbox_x_ = std::min(x1_, x2_) - stroke_width_;
+  bbox_y_ = std::min(y1_, y2_) - stroke_width_;
+  bbox_width_ = std::abs(x2_ - x1_) + stroke_width_ * 2;
+  bbox_height_ = std::abs(y2_ - y1_) + stroke_width_ * 2;
 }
 
 std::pair<double, double> Line::GetStart() const { return {x1_, y1_}; }

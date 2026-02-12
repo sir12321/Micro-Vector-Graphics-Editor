@@ -1,10 +1,6 @@
 #include "../../headers/rounded_rectangle.h"
 
-#include <algorithm>
-
-using namespace std;
-
-// Constructor.
+// Constructor
 RoundedRectangle::RoundedRectangle(double cx, double cy, double width,
                                    double height, double radius,
                                    int stroke_width)
@@ -15,12 +11,11 @@ RoundedRectangle::RoundedRectangle(double cx, double cy, double width,
       endx_(cx + width / 2.0),
       endy_(cy + height / 2.0) {
   SetStrokeWidth(stroke_width);
-  // Calculate ratio.
   double min_dim = std::min(width_, height_);
   if (min_dim > 0) {
     ratio_ = radius / min_dim;
   } else {
-    ratio_ = 0.15;  // Default fallback
+    ratio_ = 0.15;
   }
 
   double max_radius = min_dim / 2.0;
@@ -33,7 +28,7 @@ RoundedRectangle::RoundedRectangle(double cx, double cy, double width,
   bbox_height_ = height_ + stroke_width_ * 2;
 }
 
-// Draws the rounded rectangle.
+// Draws the rounded rectangle
 void RoundedRectangle::Draw(QPainter& painter) const {
   QPen pen(QColor(QString::fromStdString(stroke_color_)));
   pen.setWidth(stroke_width_);
@@ -45,7 +40,7 @@ void RoundedRectangle::Draw(QPainter& painter) const {
                           height_, radius_, radius_);
 }
 
-// Updates geometry.
+// Updates geometry
 void RoundedRectangle::SetGeometry(double x, double y, double w, double h,
                                    double rounded_rect_radius, double end_x,
                                    double end_y) {
@@ -56,7 +51,6 @@ void RoundedRectangle::SetGeometry(double x, double y, double w, double h,
   endx_ = end_x;
   endy_ = end_y;
 
-  // Update ratio.
   ratio_ = rounded_rect_radius;
   radius_ = std::min(width_, height_) * ratio_;
 
@@ -66,7 +60,7 @@ void RoundedRectangle::SetGeometry(double x, double y, double w, double h,
   bbox_height_ = h + stroke_width_ * 2;
 }
 
-// Moves the object.
+// Moves the object
 void RoundedRectangle::Move(double dx, double dy) {
   cx_ += dx;
   cy_ += dy;
@@ -94,8 +88,6 @@ void RoundedRectangle::MoveStart(double x, double y) {
   bbox_y_ = cy_ - height_ / 2.0 - stroke_width_;
   bbox_width_ = width_ + stroke_width_ * 2;
   bbox_height_ = height_ + stroke_width_ * 2;
-
-  // Update radius based on stored ratio
   radius_ = std::min(width_, height_) * ratio_;
   double max_radius = std::min(width_, height_) / 2.0;
   radius_ = std::clamp(radius_, 0.0, max_radius);
@@ -110,8 +102,6 @@ void RoundedRectangle::MoveEnd(double x, double y) {
   bbox_y_ = cy_ - height_ / 2.0 - stroke_width_;
   bbox_width_ = width_ + stroke_width_ * 2;
   bbox_height_ = height_ + stroke_width_ * 2;
-
-  // Update radius based on stored ratio
   radius_ = std::min(width_, height_) * ratio_;
   double max_radius = std::min(width_, height_) / 2.0;
   radius_ = std::clamp(radius_, 0.0, max_radius);

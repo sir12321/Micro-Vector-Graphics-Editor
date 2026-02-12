@@ -1,13 +1,9 @@
-// Wiring of UI signals to slots in the MainWindow.
-
-#include "../../headers/canvas.h"
 #include "../../headers/mainwindow.h"
-#include "../ui_mainwindow.h"
 
 // Connects all Qt signals from the UI elements to their respective
-// slots.
+// slots
 void MainWindow::connectSignals() {
-  // ---- Connect all tools ----
+  // Connect all tools
   connect(ui_->pushButton_8, &QPushButton::clicked, this,
           &MainWindow::ChooseFillColor);
   connect(ui_->pushButton_9, &QPushButton::clicked, this,
@@ -106,7 +102,6 @@ void MainWindow::connectSignals() {
       canvas_->edit_font_ = false;
     }
   });
-
   connect(ui_->actionCopy, &QAction::triggered, canvas_, &Canvas::CopySelected);
   connect(ui_->actionCut, &QAction::triggered, canvas_, &Canvas::CutSelected);
   connect(ui_->actionPaste, &QAction::triggered, canvas_, &Canvas::Paste);

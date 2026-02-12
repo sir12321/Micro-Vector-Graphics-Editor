@@ -4,11 +4,9 @@
 
 #include "../../headers/hexagon.h"
 
-using namespace std;
-
-// Exports to SVG.
-string Hexagon::ToSvg() const {
-  string points;
+// Exports to SVG
+std::string Hexagon::ToSvg() const {
+  std::string points;
 
   double vx = x_ - cx_;
   double vy = y_ - cy_;
@@ -20,67 +18,55 @@ string Hexagon::ToSvg() const {
     if (i != 5) points += " ";
   }
 
-  return "<polygon points=\"" + points + "\" fill=\"" + fill_color_ +
-         "\" stroke=\"" + stroke_color_ + "\" stroke-width=\"" +
-         to_string(stroke_width_) + "\" />\n";
+  return "<polygon\n\tpoints=\"" + points + "\"\n\tfill=\"" + fill_color_ +
+         "\"\n\tstroke=\"" + stroke_color_ + "\"\n\tstroke-width=\"" +
+         std::to_string(stroke_width_) + "\" />\n";
 }
 
-// Helper for parsing SVG attributes.
-vector<std::string> split_by_space_hexagon(const std::string& s) {
-  vector<std::string> result;
-  std::string current;
-  for (char c : s) {
-    if (c == ' ') {
-      result.push_back(current);
-      current.clear();
-    } else {
-      current += c;
+// Helper for parsing SVG attributes
+std::string get_attr_hexagon(const std::string& svg, const std::string& attr) {
+  std::size_t pos = svg.find(attr + "=\"");
+  if (pos != std::string::npos) {
+    std::size_t start = pos + attr.length() + 2;
+    std::size_t end = svg.find("\"", start);
+    if (end != std::string::npos) return svg.substr(start, end - start);
+  }
+  // Try style attribute
+  std::size_t style_pos = svg.find("style=\"");
+  if (style_pos != std::string::npos) {
+    std::size_t style_start = style_pos + 7;
+    std::size_t style_end = svg.find("\"", style_start);
+    if (style_end != std::string::npos) {
+      std::string style = svg.substr(style_start, style_end - style_start);
+      std::size_t attr_pos = style.find(attr + ":");
+      if (attr_pos != std::string::npos) {
+        std::size_t val_start = attr_pos + attr.length() + 1;
+        std::size_t val_end = style.find(";", val_start);
+        if (val_end == std::string::npos) val_end = style.length();
+        return style.substr(val_start, val_end - val_start);
+      }
     }
   }
-  if (!current.empty()) {
-    result.push_back(current);
-  }
-  return result;
+  return "";
 }
 
-// Imports from SVG.
+// Imports from SVG
 std::unique_ptr<GraphicsObject> Hexagon::FromSvg(const std::string& svg) {
   double cx = 0, cy = 0, x = 0, y = 0;
   int stroke_width = 0;
   std::string fill_color = "white", stroke_color = "black";
 
-  size_t sw_pos = svg.find("stroke-width=\"");
-  if (sw_pos != std::string::npos) {
-    try {
-      size_t sw_end = svg.find("\"", sw_pos + 14);
-      stroke_width = std::stoi(svg.substr(sw_pos + 14, sw_end - (sw_pos + 14)));
-    } catch (...) {
-    }
-  }
+  std::string val;
+  if (!(val = get_attr_hexagon(svg, "stroke-width")).empty())
+    stroke_width = std::stoi(val);
+  if (!(val = get_attr_hexagon(svg, "fill")).empty()) fill_color = val;
+  if (!(val = get_attr_hexagon(svg, "stroke")).empty()) stroke_color = val;
 
-  size_t stroke_pos = svg.find("stroke=\"");
-  if (stroke_pos != std::string::npos) {
-    try {
-      size_t stroke_end = svg.find("\"", stroke_pos + 8);
-      stroke_color = svg.substr(stroke_pos + 8, stroke_end - (stroke_pos + 8));
-    } catch (...) {
-    }
-  }
-
-  size_t fill_pos = svg.find("fill=\"");
-  if (fill_pos != std::string::npos) {
-    try {
-      size_t fill_end = svg.find("\"", fill_pos + 6);
-      fill_color = svg.substr(fill_pos + 6, fill_end - (fill_pos + 6));
-    } catch (...) {
-    }
-  }
-
-  size_t points_pos = svg.find("points=\"");
+  std::size_t points_pos = svg.find("points=\"");
   if (points_pos != std::string::npos) {
     try {
-      size_t points_start = points_pos + 8;
-      size_t points_end = svg.find("\"", points_start);
+      std::size_t points_start = points_pos + 8;
+      std::size_t points_end = svg.find("\"", points_start);
       std::string points_str =
           svg.substr(points_start, points_end - points_start);
 
@@ -88,7 +74,7 @@ std::unique_ptr<GraphicsObject> Hexagon::FromSvg(const std::string& svg) {
       std::stringstream ss(points_str);
       std::string point_pair;
       while (ss >> point_pair) {
-        size_t comma = point_pair.find(',');
+        std::size_t comma = point_pair.find(',');
         if (comma != std::string::npos) {
           double px = std::stod(point_pair.substr(0, comma));
           double py = std::stod(point_pair.substr(comma + 1));

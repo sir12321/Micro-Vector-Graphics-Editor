@@ -1,21 +1,17 @@
 #include "../../headers/circle.h"
 
-#include <cmath>
-
-using namespace std;
-
 Circle::Circle(double cx, double cy, double r, int stroke_width)
     : cx_(cx), cy_(cy), rx_(r), ry_(r), endx_(cx + r), endy_(cy + r) {
   id_ = "circle";
   SetStrokeWidth(stroke_width);
-  // Calculate bounding box.
+  // Calculate bounding box
   bbox_x_ = cx_ - (rx_ + stroke_width_ * 2);
   bbox_y_ = cy_ - (ry_ + stroke_width_ * 2);
   bbox_width_ = 2 * (rx_ + stroke_width_ * 2);
   bbox_height_ = 2 * (ry_ + stroke_width_ * 2);
 }
 
-// Draws the ellipse.
+// Draws the ellipse
 void Circle::Draw(QPainter& painter) const {
   QPen pen(QColor(QString::fromStdString(stroke_color_)));
   pen.setWidth(stroke_width_);
@@ -26,7 +22,7 @@ void Circle::Draw(QPainter& painter) const {
   painter.drawEllipse(QPointF(cx_, cy_), rx_, ry_);
 }
 
-// Moves the circle.
+// Moves the circle
 void Circle::Move(double dx, double dy) {
   cx_ += dx;
   cy_ += dy;
@@ -36,7 +32,7 @@ void Circle::Move(double dx, double dy) {
   endy_ += dy;
 }
 
-// Updates geometry.
+// Updates geometry
 void Circle::SetGeometry(double x, double y, double w, double h,
                          double rounded_rect_radius, double end_x,
                          double end_y) {
@@ -62,8 +58,8 @@ std::unique_ptr<GraphicsObject> Circle::Clone() const {
 void Circle::MoveStart(double x, double y) {
   cx_ = x;
   cy_ = y;
-  rx_ = abs(endx_ - cx_);
-  ry_ = abs(endy_ - cy_);
+  rx_ = std::abs(endx_ - cx_);
+  ry_ = std::abs(endy_ - cy_);
   bbox_x_ = cx_ - (rx_ + stroke_width_ * 2);
   bbox_y_ = cy_ - (ry_ + stroke_width_ * 2);
   bbox_width_ = 2 * (rx_ + stroke_width_ * 2);
@@ -73,8 +69,8 @@ void Circle::MoveStart(double x, double y) {
 void Circle::MoveEnd(double x, double y) {
   endx_ = x;
   endy_ = y;
-  rx_ = abs(endx_ - cx_);
-  ry_ = abs(endy_ - cy_);
+  rx_ = std::abs(endx_ - cx_);
+  ry_ = std::abs(endy_ - cy_);
   bbox_x_ = cx_ - (rx_ + stroke_width_ * 2);
   bbox_y_ = cy_ - (ry_ + stroke_width_ * 2);
   bbox_width_ = 2 * (rx_ + stroke_width_ * 2);

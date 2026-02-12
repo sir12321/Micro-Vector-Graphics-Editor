@@ -22,6 +22,8 @@ add_executable(program
     src/gui/headers/mainwindow.h
     src/gui/implementation/mainwindow.ui
     src/gui/implementation/mainwindow/color_setter.cpp
+    src/gui/implementation/mainwindow/fill_color_setter.cpp
+    src/gui/implementation/mainwindow/stroke_color_setter.cpp
     src/gui/implementation/mainwindow/connect.cpp
     src/gui/implementation/mainwindow/default_initialise.cpp
     src/gui/implementation/mainwindow/open_save_saveas.cpp
@@ -31,12 +33,12 @@ add_executable(program
     src/gui/implementation/canvas/canvas_key.cpp
     src/gui/implementation/canvas/canvas_paint.cpp
     src/gui/implementation/canvas/canvas_cursor.cpp
+    src/gui/implementation/canvas/undo_redo.cpp
     src/gui/implementation/canvas/mouse/mouse_double_click_event.cpp
     src/gui/implementation/canvas/mouse/mouse_move_event.cpp
     src/gui/implementation/canvas/mouse/mouse_press_event.cpp
     src/gui/implementation/canvas/mouse/mouse_release_event.cpp
     src/gui/headers/canvas.h
-    src/gui/headers/mainwindow.h
     src/gui/headers/tools.h
 
     # Diagram

@@ -1,6 +1,3 @@
-#include <QMouseEvent>
-
-#include "../../../../model/shape_factory/shape_factory.h"
 #include "../../../headers/canvas.h"
 
 // Handles tools usage (creation, selection, filling) on mouse press
@@ -38,7 +35,7 @@ void Canvas::mousePressEvent(QMouseEvent* event) {
     }
   }
 
-  // ---- SHAPE CREATION MODE ----
+  // SHAPE CREATION MODE
   // freehand tool
   if (active_tool_ == Tool::Freehand && event->button() == Qt::LeftButton) {
     PushUndoState();
@@ -105,7 +102,7 @@ void Canvas::mousePressEvent(QMouseEvent* event) {
     return;
   }
 
-  // ---- FILL / STROKEFILL MODE ----
+  // FILL / STROKEFILL MODE
   if (active_tool_ == Tool::Fill) {
     if (editing_text_) {
       is_typing_text_ = false;
@@ -146,7 +143,7 @@ void Canvas::mousePressEvent(QMouseEvent* event) {
     return;
   }
 
-  // ---- SELECTION MODE ----
+  // SELECTION MODE
   selected_object_ = nullptr;
   dragging_object_ = nullptr;
   PushUndoState();

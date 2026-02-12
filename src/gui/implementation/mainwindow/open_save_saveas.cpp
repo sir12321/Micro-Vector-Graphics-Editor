@@ -1,13 +1,6 @@
-#include <QFileDialog>
-#include <QMessageBox>
-#include <fstream>
-#include <sstream>
-
-#include "../../headers/canvas.h"
 #include "../../headers/mainwindow.h"
-#include "../ui_mainwindow.h"
 
-// Returns true if safe to proceed (saved or discarded), false to cancel.
+// Returns true if safe to proceed (saved or discarded), false to cancel
 bool MainWindow::MaybeSave() {
   QMessageBox::StandardButton ret;
   ret = QMessageBox::warning(
@@ -21,10 +14,10 @@ bool MainWindow::MaybeSave() {
   } else if (ret == QMessageBox::Cancel) {
     return false;
   }
-  return true;  // Discard
+  return true;
 }
 
-// Saves to a new file.
+// Saves to a new file
 bool MainWindow::SaveAs() {
   QString file =
       QFileDialog::getSaveFileName(this, "Save As", "", "SVG Files (*.svg)");
@@ -37,7 +30,7 @@ bool MainWindow::SaveAs() {
   return true;
 }
 
-// Saves the diagram.
+// Saves the diagram
 bool MainWindow::Save() {
   if (current_file_.isEmpty()) {
     return SaveAs();
@@ -48,7 +41,7 @@ bool MainWindow::Save() {
   return true;
 }
 
-// Opens an SVG file.
+// Opens an SVG file
 void MainWindow::Open() {
   if (MaybeSave()) {
     QString file =
@@ -68,7 +61,7 @@ void MainWindow::Open() {
   }
 }
 
-// Closes the document.
+// Closes the document
 void MainWindow::Close() {
   if (MaybeSave()) {
     diagram_.Clear();
@@ -78,7 +71,7 @@ void MainWindow::Close() {
   }
 }
 
-// Creates a new document.
+// Creates a new document
 void MainWindow::New() {
   if (MaybeSave()) {
     diagram_.Clear();

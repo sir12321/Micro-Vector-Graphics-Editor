@@ -4,7 +4,7 @@
 #include <QPainter>
 #include <string>
 
-// Abstract base class for all graphics objects.
+// Abstract base class for all graphics objects
 class GraphicsObject {
  protected:
   // styling attributes
@@ -26,7 +26,7 @@ class GraphicsObject {
   virtual std::string ToSvg() const = 0;
   virtual std::unique_ptr<GraphicsObject> FromSvg(const std::string& svg) = 0;
 
-  // Bounding box getters (used by GUI later)
+  // Bounding box getters
   double BboxX() const;
   double BboxY() const;
   double BboxWidth() const;
@@ -44,18 +44,18 @@ class GraphicsObject {
 
   virtual void MoveEnd(double x, double y) = 0;
 
-  // Sets the stroke color.
+  // Sets the stroke color
   void SetStrokeColor(const std::string& color);
-  // Sets the fill color.
+  // Sets the fill color
   void SetFillColor(const std::string& color);
-  // Sets the stroke width.
+  // Sets the stroke width
   void SetStrokeWidth(int width);
 
   std::string GetStrokeColor() const;
   std::string GetFillColor() const;
   int GetStrokeWidth() const;
 
-  // Returns the object ID.
+  // Returns the object ID
   std::string GetId() const;
 };
 

@@ -1,19 +1,16 @@
-#include <QPainter>
-
 #include "../../headers/canvas.h"
 
-// Renders all diagram objects and selection indicators
 void Canvas::paintEvent(QPaintEvent* /*event*/) {
   QPainter painter(this);
   painter.setRenderHint(QPainter::Antialiasing);
 
-  // ---- Draw all objects ----
+  // Draw all objects
   for (const auto& obj : diagram_.objects()) {
     if (obj != nullptr) {
       obj->Draw(painter);
     }
 
-    // ---- Selection highlight (generic) ----
+    // Selection highlight
     if (obj.get() == selected_object_) {
       if (obj->GetId() != "text") {
         QPen pen(Qt::black);
