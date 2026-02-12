@@ -13,6 +13,11 @@ void Canvas::mouseMoveEvent(QMouseEvent* event) {
     update();
     return;
   }
+  if (is_resize_3_ && selected_object_) {
+    selected_object_->MoveLast(event->pos().x(), event->pos().y());
+    update();
+    return;
+  }
 
   // Handle freehand drawing path updates
   if (is_drawing_freehand_ && current_freehand_) {

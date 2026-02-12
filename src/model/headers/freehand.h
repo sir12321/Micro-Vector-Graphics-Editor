@@ -13,6 +13,12 @@
 // Represents a freehand drawing path
 class Freehand : public GraphicsObject {
  private:
+  double last_x_;
+  double last_y_;
+  double handle_start_x_;
+  double handle_start_y_;
+  double handle_end_x_;
+  double handle_end_y_;
   std::vector<QPointF> points_;  // List of points in the path
 
  public:
@@ -49,9 +55,13 @@ class Freehand : public GraphicsObject {
 
   void MoveEnd(double x, double y) override;
 
+  void MoveLast(double x, double y) override;
+
   std::pair<double, double> GetStart() const override;
 
   std::pair<double, double> GetEnd() const override;
+
+  std::pair<double, double> GetLast() const override;
 };
 
 #endif  // SRC_MODEL_HEADERS_FREEHAND_H_

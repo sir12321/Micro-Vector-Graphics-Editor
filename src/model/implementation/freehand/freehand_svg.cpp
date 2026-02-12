@@ -105,6 +105,12 @@ std::unique_ptr<GraphicsObject> Freehand::FromSvg(const std::string& svg) {
     obj->bbox_y_ = min_y;
     obj->bbox_width_ = max_x - min_x;
     obj->bbox_height_ = max_y - min_y;
+    obj->last_x_ = obj->bbox_x_ + obj->bbox_width_;
+    obj->last_y_ = obj->bbox_y_ + obj->bbox_height_;
+    obj->handle_start_x_ = obj->bbox_x_;
+    obj->handle_start_y_ = obj->bbox_y_;
+    obj->handle_end_x_ = obj->last_x_;
+    obj->handle_end_y_ = obj->last_y_;
   }
   obj->SetStrokeWidth(stroke_width);
 

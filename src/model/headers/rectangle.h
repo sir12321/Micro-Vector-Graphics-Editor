@@ -42,9 +42,13 @@ class Rectangle : public GraphicsObject {
 
   void MoveEnd(double x, double y) override;
 
+  void MoveLast(double x, double y) override;
+
   std::pair<double, double> GetStart() const override;
 
   std::pair<double, double> GetEnd() const override;
+
+  std::pair<double, double> GetLast() const override;
 };
 
 #endif

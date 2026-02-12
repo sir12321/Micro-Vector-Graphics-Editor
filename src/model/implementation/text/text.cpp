@@ -97,6 +97,10 @@ void TextObject::MoveStart(double x, double y) {}
 
 void TextObject::MoveEnd(double x, double y) {}
 
+void TextObject::MoveLast(double x, double y) {}
+
 std::pair<double, double> TextObject::GetStart() const { return {x_, y_}; }
 
 std::pair<double, double> TextObject::GetEnd() const { return {x_, y_}; }
+
+std::pair<double, double> TextObject::GetLast() const { return {x_, y_}; }

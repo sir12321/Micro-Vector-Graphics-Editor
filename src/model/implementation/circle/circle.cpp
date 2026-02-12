@@ -77,6 +77,10 @@ void Circle::MoveEnd(double x, double y) {
   bbox_height_ = 2 * (ry_ + stroke_width_ * 2);
 }
 
+void Circle::MoveLast(double x, double y) {}
+
 std::pair<double, double> Circle::GetStart() const { return {cx_, cy_}; }
 
 std::pair<double, double> Circle::GetEnd() const { return {endx_, endy_}; }
+
+std::pair<double, double> Circle::GetLast() const { return {cx_, cy_}; }

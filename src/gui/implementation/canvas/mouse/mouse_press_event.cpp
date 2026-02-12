@@ -157,6 +157,8 @@ void Canvas::mousePressEvent(QMouseEvent* event) {
       is_resize1_ = true;
     } else if (IsPointInsideResizeEnd(selected_object_, event->pos())) {
       is_resize2_ = true;
+    } else if (IsPointInsideLast(selected_object_, event->pos())) {
+      is_resize_3_ = true;
     }
   }
 

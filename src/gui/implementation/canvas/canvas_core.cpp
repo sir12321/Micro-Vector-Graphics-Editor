@@ -21,6 +21,7 @@ Canvas::Canvas(Diagram& diagram, QWidget* parent)
       is_drawing_freehand_(false),
       is_resize1_(false),
       is_resize2_(false),
+      is_resize_3_(false),
       edit_font_(false),
       active_tool_text_(false) {
   setFocusPolicy(Qt::StrongFocus);
@@ -50,12 +51,24 @@ bool Canvas::IsPointInsideResizeStart(GraphicsObject* obj,
   return point.x() >= x && point.x() <= x + w && point.y() >= y &&
          point.y() <= y + h;
 }
-// Check if a point is near the end handle for resizing
 
+// Check if a point is near the end handle for resizing
 bool Canvas::IsPointInsideResizeEnd(GraphicsObject* obj,
                                     const QPoint& point) const {
   double x = obj->GetEnd().first - 10;
   double y = obj->GetEnd().second - 10;
+  double w = 20;
+  double h = 20;
+
+  return point.x() >= x && point.x() <= x + w && point.y() >= y &&
+         point.y() <= y + h;
+}
+
+// Check if a point is near the last handle for resizing
+bool Canvas::IsPointInsideLast(GraphicsObject* obj, const QPoint& point) const {
+  if (obj->GetId() != "freehand") return false;
+  double x = obj->GetLast().first - 10;
+  double y = obj->GetLast().second - 10;
   double w = 20;
   double h = 20;
 

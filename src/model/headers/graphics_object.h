@@ -2,6 +2,7 @@
 #define SRC_MODEL_GRAPHICS_OBJECT_H_
 
 #include <QPainter>
+#include <memory>
 #include <string>
 
 // Abstract base class for all graphics objects
@@ -34,6 +35,7 @@ class GraphicsObject {
 
   virtual std::pair<double, double> GetStart() const = 0;
   virtual std::pair<double, double> GetEnd() const = 0;
+  virtual std::pair<double, double> GetLast() const = 0;
 
   virtual void Draw(QPainter& painter) const = 0;
   virtual void Move(double dx, double dy) = 0;
@@ -43,6 +45,8 @@ class GraphicsObject {
   virtual void MoveStart(double x, double y) = 0;
 
   virtual void MoveEnd(double x, double y) = 0;
+
+  virtual void MoveLast(double x, double y) = 0;
 
   // Sets the stroke color
   void SetStrokeColor(const std::string& color);

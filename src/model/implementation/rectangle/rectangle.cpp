@@ -85,6 +85,10 @@ void Rectangle::MoveEnd(double x, double y) {
   bbox_height_ = height_ + stroke_width_ * 2;
 }
 
+void Rectangle::MoveLast(double x, double y) {}
+
 std::pair<double, double> Rectangle::GetStart() const { return {cx_, cy_}; }
 
 std::pair<double, double> Rectangle::GetEnd() const { return {endx_, endy_}; }
+
+std::pair<double, double> Rectangle::GetLast() const { return {cx_, cy_}; }

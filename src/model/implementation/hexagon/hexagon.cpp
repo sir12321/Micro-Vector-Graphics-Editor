@@ -88,6 +88,10 @@ void Hexagon::MoveEnd(double x, double y) {
   bbox_height_ = 2 * (r + stroke_width_);
 }
 
+void Hexagon::MoveLast(double x, double y) {}
+
 std::pair<double, double> Hexagon::GetStart() const { return {cx_, cy_}; }
 
 std::pair<double, double> Hexagon::GetEnd() const { return {x_, y_}; }
+
+std::pair<double, double> Hexagon::GetLast() const { return {x_, y_}; }

@@ -107,10 +107,16 @@ void RoundedRectangle::MoveEnd(double x, double y) {
   radius_ = std::clamp(radius_, 0.0, max_radius);
 }
 
+void RoundedRectangle::MoveLast(double x, double y) {}
+
 std::pair<double, double> RoundedRectangle::GetStart() const {
   return {cx_, cy_};
 }
 
 std::pair<double, double> RoundedRectangle::GetEnd() const {
   return {endx_, endy_};
+}
+
+std::pair<double, double> RoundedRectangle::GetLast() const {
+  return {cx_, cy_};
 }

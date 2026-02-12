@@ -70,6 +70,10 @@ void Line::MoveEnd(double x, double y) {
   bbox_height_ = std::abs(y2_ - y1_) + stroke_width_ * 2;
 }
 
+void Line::MoveLast(double x, double y) {}
+
 std::pair<double, double> Line::GetStart() const { return {x1_, y1_}; }
 
 std::pair<double, double> Line::GetEnd() const { return {x2_, y2_}; }
+
+std::pair<double, double> Line::GetLast() const { return {x2_, y2_}; }

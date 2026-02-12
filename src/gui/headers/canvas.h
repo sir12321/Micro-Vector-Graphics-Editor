@@ -105,11 +105,13 @@ class Canvas : public QWidget {
   bool IsPointInsideBoundingBox(GraphicsObject* obj, const QPoint& point) const;
   bool IsPointInsideResizeStart(GraphicsObject* obj, const QPoint& point) const;
   bool IsPointInsideResizeEnd(GraphicsObject* obj, const QPoint& point) const;
+  bool IsPointInsideLast(GraphicsObject* obj, const QPoint& point) const;
   bool is_creating_;
   bool is_typing_text_;
   bool is_drawing_freehand_;
   bool is_resize1_;
   bool is_resize2_;
+  bool is_resize_3_;
   bool active_tool_text_;
 
   void DeleteSelectedObject();

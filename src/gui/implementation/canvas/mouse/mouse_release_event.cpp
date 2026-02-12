@@ -3,9 +3,10 @@
 // Handles finishing operations (resizing, drawing, creation) on mouse release
 void Canvas::mouseReleaseEvent(QMouseEvent* event) {
   // Reset resize
-  if (is_resize1_ || is_resize2_) {
+  if (is_resize1_ || is_resize2_ || is_resize_3_) {
     is_resize1_ = false;
     is_resize2_ = false;
+    is_resize_3_ = false;
     update();
   }
 

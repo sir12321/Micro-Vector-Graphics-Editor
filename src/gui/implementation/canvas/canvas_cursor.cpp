@@ -37,7 +37,8 @@ void Canvas::updateCursor() {
 
   if (selected_object_) {
     if (IsPointInsideResizeStart(selected_object_, pos) ||
-        IsPointInsideResizeEnd(selected_object_, pos)) {
+        IsPointInsideResizeEnd(selected_object_, pos) ||
+        IsPointInsideLast(selected_object_, pos)) {
       setCursor(Qt::SizeFDiagCursor);
       return;
     }
