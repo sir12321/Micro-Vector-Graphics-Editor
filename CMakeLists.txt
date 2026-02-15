@@ -44,6 +44,7 @@ add_executable(program
     # Diagram
     src/diagram/diagram.cpp
     src/diagram/diagram.h
+    src/diagram/diagram_svg.cpp
 
     # Model
     src/model/implementation/graphics_object.cpp
@@ -54,6 +55,9 @@ add_executable(program
     src/model/headers/circle.h
     
     src/model/implementation/freehand/freehand.cpp
+    src/model/implementation/freehand/freehand_edit.cpp
+    src/model/implementation/freehand/freehand_resize1.cpp
+    src/model/implementation/freehand/freehand_resize2.cpp
     src/model/implementation/freehand/freehand_svg.cpp
     src/model/headers/freehand.h
     

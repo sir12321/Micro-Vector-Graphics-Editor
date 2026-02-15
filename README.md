@@ -68,6 +68,20 @@ To build and run this project, you need the following installed:
     ./program
     ```
 
+## Helper Scripts
+
+Two helper scripts are available at the project root:
+
+- **`./start`**: Configures CMake, builds the project, and runs the application.
+- **`./clean`**: Removes the `build/` directory.
+
+Usage:
+
+```bash
+./start
+./clean
+```
+
 ## Project Structure
 
 The source code is organized as follows:
@@ -94,5 +108,6 @@ The source code is organized as follows:
 ## Authors
 
 - **cs1240351@iitd.ac.in**
+- **Manya Jain** (2024CS10351)
 
 

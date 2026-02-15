@@ -16,26 +16,16 @@
 #include "../../model/shape_factory/shape_factory.h"
 #include "tools.h"
 
-// Main drawing widget handling rendering and user interaction
 class Canvas : public QWidget {
-  // used to declare undo and redo as public slots, imp or else undo function
-  // can't be converted into signal
   Q_OBJECT
- public slots:  // A slot is a function that can be connected to a signal (like
-                // a button click or a menu action). When the signal is emitted,
-                // the connected slot is executed.
+ public slots:
   // Undo/Redo operations
   void Undo();
   void Redo();
 
  public:
   bool edit_font_;
-  explicit Canvas(
-      Diagram& diagram,
-      QWidget* parent = nullptr);  // explicit here so that the code wouldn't
-                                   // create hidden canvas, calls the
-                                   // constructor only when i call it explicitly
-
+  explicit Canvas(Diagram& diagram, QWidget* parent = nullptr);
   // Tool and property setters/getters
   void SetActiveTool(Tool tool);
   void SetActiveFillColor(const std::string& color);
@@ -49,16 +39,13 @@ class Canvas : public QWidget {
   int GetTextFontSize() const;
   std::string GetActiveFillColor() const;
   std::string GetActiveStrokeColor() const;
-
   // Clipboard operations
   void CopySelected();
   void CutSelected();
   void Paste();
-
   // SVG
   std::string ExportSvg() const;
   void ImportSvg(const std::string& svg);
-
   // Reset stacks
   void UndoRedoReset();
 
@@ -67,17 +54,14 @@ class Canvas : public QWidget {
   void paintEvent(QPaintEvent* event) override;
   void ApplyFillToSelected();
   void ApplyStrokeToSelected();
-
   // Mouse interaction
   void mousePressEvent(QMouseEvent* event) override;
   void mouseMoveEvent(QMouseEvent* event) override;
   void mouseReleaseEvent(QMouseEvent* event) override;
   void mouseDoubleClickEvent(QMouseEvent* event) override;
   GraphicsObject* GetObjectAt(const QPoint& pos);
-
   // Keyboard interactions
   void keyPressEvent(QKeyEvent* event) override;
-
   void updateCursor();
 
  private:
@@ -86,7 +70,6 @@ class Canvas : public QWidget {
   GraphicsObject* dragging_object_;
   GraphicsObject* preview_object_;
   std::unique_ptr<GraphicsObject> clipboard_;
-
   Freehand* current_freehand_;
   Tool active_tool_;
   std::string active_fill_color_;
@@ -96,11 +79,9 @@ class Canvas : public QWidget {
   int active_font_size_;
   TextObject* editing_text_;
   std::string active_font_family_;
-
   QPoint last_mouse_pos_;
   QPoint create_start_;
   QPoint drag_start_;
-
   // Helpers
   bool IsPointInsideBoundingBox(GraphicsObject* obj, const QPoint& point) const;
   bool IsPointInsideResizeStart(GraphicsObject* obj, const QPoint& point) const;
@@ -113,7 +94,6 @@ class Canvas : public QWidget {
   bool is_resize2_;
   bool is_resize_3_;
   bool active_tool_text_;
-
   void DeleteSelectedObject();
   std::vector<std::string> undo_stack_;
   std::vector<std::string> redo_stack_;
