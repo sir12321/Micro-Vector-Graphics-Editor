@@ -40,28 +40,34 @@ To build and run this project, you need the following installed:
 ## Build Instructions
 
 1.  **Clone the repository** (if you haven't already):
+
     ```bash
     git clone <repository-url>
     cd Micro-Vector-Graphics-Editor
     ```
-    *(Note: Ensure you are in the directory containing `CMakeLists.txt`)*
+
+    _(Note: Ensure you are in the directory containing `CMakeLists.txt`)_
 
 2.  **Create a build directory**:
+
     ```bash
     mkdir build
     cd build
     ```
 
 3.  **Configure the project with CMake**:
+
     ```bash
     cmake ..
     ```
 
 4.  **Build the application**:
+
     ```bash
     make
     ```
-    *(Or `cmake --build .` on Windows/other systems)*
+
+    _(Or `cmake --build .` on Windows/other systems)_
 
 5.  **Run the application**:
     ```bash
@@ -107,7 +113,4 @@ The source code is organized as follows:
 
 ## Authors
 
-- **cs1240351@iitd.ac.in**
-- **Manya Jain** (2024CS10351)
-
-
+- Manya Jain
