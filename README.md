@@ -28,7 +28,7 @@ A lightweight vector graphics editor built with C++17 and the Qt5 framework. Thi
   - **Open** existing diagrams.
   - **Save** and **Save As** functionality (supports SVG export).
   - **Close** current project.
-
+<img width="1269" height="892" alt="image" src="https://github.com/user-attachments/assets/d0d3471d-02e5-4815-a184-2047e3f90649" />
 ## Prerequisites
 
 To build and run this project, you need the following installed:
