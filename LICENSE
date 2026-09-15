@@ -1,0 +1,15 @@
+unknown command "license" for "gh repo"
+
+Usage:  gh repo <command> [flags]
+
+Available commands:
+  archive
+  clone
+  create
+  delete
+  edit
+  fork
+  list
+  rename
+  sync
+  view
