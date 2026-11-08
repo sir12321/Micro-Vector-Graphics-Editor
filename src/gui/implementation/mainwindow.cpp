@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget* parent)
   setWindowTitle("Micro Vector Editor");
   MainWindow::connectSignals();
   MainWindow::initialise();
+  saved_svg_ = canvas_->ExportSvg();  // Empty diagram counts as saved
 }
 
 // Clean up UI resources

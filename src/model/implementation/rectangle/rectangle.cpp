@@ -25,7 +25,9 @@ void Rectangle::Draw(QPainter& painter) const {
 
   painter.setBrush(QColor(QString::fromStdString(fill_color_)));
 
-  painter.drawRect(cx_ - width_ / 2.0, cy_ - height_ / 2.0, width_, height_);
+  // QRectF keeps sub-pixel precision when zoomed in
+  painter.drawRect(
+      QRectF(cx_ - width_ / 2.0, cy_ - height_ / 2.0, width_, height_));
 }
 
 // Updates geometry

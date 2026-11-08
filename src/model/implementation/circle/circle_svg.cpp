@@ -9,48 +9,48 @@ std::string Circle::ToSvg() const {
          std::to_string(stroke_width_) + "\" />\n";
 }
 
-// Helper to parse space-separated attributes
-std::string get_attr_circle(const std::string& svg, const std::string& attr) {
-  std::size_t pos = svg.find(attr + "=\"");
-  if (pos != std::string::npos) {
-    std::size_t start = pos + attr.length() + 2;
-    std::size_t end = svg.find("\"", start);
-    if (end != std::string::npos) return svg.substr(start, end - start);
-  }
-  // Try style attribute
-  std::size_t style_pos = svg.find("style=\"");
-  if (style_pos != std::string::npos) {
-    std::size_t style_start = style_pos + 7;
-    std::size_t style_end = svg.find("\"", style_start);
-    if (style_end != std::string::npos) {
-      std::string style = svg.substr(style_start, style_end - style_start);
-      std::size_t attr_pos = style.find(attr + ":");
-      if (attr_pos != std::string::npos) {
-        std::size_t val_start = attr_pos + attr.length() + 1;
-        std::size_t val_end = style.find(";", val_start);
-        if (val_end == std::string::npos) val_end = style.length();
-        return style.substr(val_start, val_end - val_start);
-      }
-    }
-  }
-  return "";
-}
-
 // Imports from SVG
 std::unique_ptr<GraphicsObject> Circle::FromSvg(const std::string& svg) {
   double cx = 0, cy = 0, rx = 0, ry = 0;
   int stroke_width = 0;
   std::string fill_color = "white", stroke_color = "black";
 
-  std::string val;
-  if (!(val = get_attr_circle(svg, "cx")).empty()) cx = std::stod(val);
-  if (!(val = get_attr_circle(svg, "cy")).empty()) cy = std::stod(val);
-  if (!(val = get_attr_circle(svg, "rx")).empty()) rx = std::stod(val);
-  if (!(val = get_attr_circle(svg, "ry")).empty()) ry = std::stod(val);
-  if (!(val = get_attr_circle(svg, "stroke-width")).empty())
-    stroke_width = std::stoi(val);
-  if (!(val = get_attr_circle(svg, "fill")).empty()) fill_color = val;
-  if (!(val = get_attr_circle(svg, "stroke")).empty()) stroke_color = val;
+  // Read each attribute as attr="value", falling back to style="attr:value"
+  const std::string attrs[7] = {"cx", "cy",           "rx",    "ry",
+                                "stroke-width", "fill", "stroke"};
+  std::string vals[7];
+  for (int i = 0; i < 7; ++i) {
+    const std::string& attr = attrs[i];
+    std::size_t pos = svg.find(attr + "=\"");
+    if (pos != std::string::npos) {
+      std::size_t start = pos + attr.length() + 2;
+      std::size_t end = svg.find("\"", start);
+      if (end != std::string::npos) {
+        vals[i] = svg.substr(start, end - start);
+        continue;
+      }
+    }
+    std::size_t style_pos = svg.find("style=\"");
+    if (style_pos == std::string::npos) continue;
+    std::size_t style_start = style_pos + 7;
+    std::size_t style_end = svg.find("\"", style_start);
+    if (style_end == std::string::npos) continue;
+    std::string style = svg.substr(style_start, style_end - style_start);
+    std::size_t attr_pos = style.find(attr + ":");
+    if (attr_pos == std::string::npos) continue;
+    std::size_t val_start = attr_pos + attr.length() + 1;
+    std::size_t val_end = style.find(";", val_start);
+    if (val_end == std::string::npos) val_end = style.length();
+    vals[i] = style.substr(val_start, val_end - val_start);
+  }
+
+  if (!vals[0].empty()) cx = std::stod(vals[0]);
+  if (!vals[1].empty()) cy = std::stod(vals[1]);
+  if (!vals[2].empty()) rx = std::stod(vals[2]);
+  if (!vals[3].empty()) ry = std::stod(vals[3]);
+  if (!vals[4].empty()) stroke_width = std::stoi(vals[4]);
+  if (!vals[5].empty()) fill_color = vals[5];
+  if (!vals[6].empty()) stroke_color = vals[6];
 
   auto obj = std::make_unique<Circle>(cx, cy, (rx + ry) / 2, stroke_width);
   obj->SetGeometry(cx, cy, 0, 0, 0, cx + rx, cy + ry);

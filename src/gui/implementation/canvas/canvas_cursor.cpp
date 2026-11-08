@@ -1,6 +1,12 @@
 #include "../../headers/canvas.h"
 
 void Canvas::updateCursor() {
+  // Grabbing hand while panning the infinite canvas
+  if (is_panning_) {
+    setCursor(Qt::ClosedHandCursor);
+    return;
+  }
+
   if (active_tool_ != Tool::None) {
     if (active_tool_ == Tool::Fill) {
       QPixmap pixmap(":/icons/icons/fill.png");
@@ -23,7 +29,8 @@ void Canvas::updateCursor() {
     return;
   }
 
-  QPoint pos = mapFromGlobal(QCursor::pos());
+  // Cursor position in world coordinates (for hit testing)
+  QPointF pos = ToWorld(mapFromGlobal(QCursor::pos()));
 
   if (dragging_object_) {
     setCursor(Qt::ClosedHandCursor);

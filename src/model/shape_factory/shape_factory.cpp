@@ -2,7 +2,7 @@
 
 // Creates a shape based on the tool and parameters
 std::unique_ptr<GraphicsObject> CreateShape(
-    Tool tool, const QPoint& start, const QPoint& end,
+    Tool tool, const QPointF& start, const QPointF& end,
     const std::string& fill_color, const std::string& stroke_color,
     int stroke_width, double rounded_rect_radius, int canvas_font_size) {
   switch (tool) {

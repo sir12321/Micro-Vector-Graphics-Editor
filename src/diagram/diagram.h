@@ -39,9 +39,12 @@ class Diagram {
   const std::vector<std::unique_ptr<GraphicsObject>>& objects() const;
 
   std::size_t size() const;
+  // Union of all objects' bounding boxes (stroke included); empty if none
+  QRectF BoundingRect() const;
 
   // SVG
-  std::string ToSvg() const;
+  // fit_view_box: add width/height/viewBox covering all objects (for files)
+  std::string ToSvg(bool fit_view_box = false) const;
   void FromSvg(const std::string& svg);
 
  private:

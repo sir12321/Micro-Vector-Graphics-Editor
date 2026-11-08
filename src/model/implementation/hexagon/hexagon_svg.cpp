@@ -1,8 +1,15 @@
+#include <algorithm>
 #include <cmath>
 #include <iostream>
 #include <sstream>
 
 #include "../../headers/hexagon.h"
+
+namespace {
+// Pi as a standard C++ constant (M_PI is non-standard and is missing on
+// MSVC unless _USE_MATH_DEFINES is set)
+constexpr double kPi = 3.14159265358979323846;
+}  // namespace
 
 // Exports to SVG
 std::string Hexagon::ToSvg() const {
@@ -11,7 +18,7 @@ std::string Hexagon::ToSvg() const {
   double vx = x_ - cx_;
   double vy = y_ - cy_;
   for (int i = 0; i < 6; ++i) {
-    double angle = i * M_PI / 3.0;
+    double angle = i * kPi / 3.0;
     double rx = vx * std::cos(angle) - vy * std::sin(angle);
     double ry = vx * std::sin(angle) + vy * std::cos(angle);
     points += std::to_string(cx_ + rx) + "," + std::to_string(cy_ + ry);
@@ -63,34 +70,28 @@ std::unique_ptr<GraphicsObject> Hexagon::FromSvg(const std::string& svg) {
   if (!(val = get_attr_hexagon(svg, "stroke")).empty()) stroke_color = val;
 
   std::size_t points_pos = svg.find("points=\"");
-  if (points_pos != std::string::npos) {
-    try {
-      std::size_t points_start = points_pos + 8;
-      std::size_t points_end = svg.find("\"", points_start);
-      std::string points_str =
-          svg.substr(points_start, points_end - points_start);
+  if (points_pos == std::string::npos) return nullptr;
+  std::size_t points_start = points_pos + 8;
+  std::size_t points_end = svg.find("\"", points_start);
+  std::string points_str = svg.substr(points_start, points_end - points_start);
 
-      std::vector<std::pair<double, double>> points_list;
-      std::stringstream ss(points_str);
-      std::string point_pair;
-      while (ss >> point_pair) {
-        std::size_t comma = point_pair.find(',');
-        if (comma != std::string::npos) {
-          double px = std::stod(point_pair.substr(0, comma));
-          double py = std::stod(point_pair.substr(comma + 1));
-          points_list.push_back({px, py});
-        }
-      }
-      if (points_list.size() >= 4) {
-        x = points_list[0].first;
-        y = points_list[0].second;
-        cx = (points_list[0].first + points_list[3].first) / 2.0;
-        cy = (points_list[0].second + points_list[3].second) / 2.0;
-      }
-    } catch (...) {
-      // Skip invalid attributes
-    }
-  }
+  // Coordinates may be "x,y x,y ..." or "x y x y ..." (both valid SVG):
+  // treat commas as spaces and read the numbers in pairs
+  std::replace(points_str.begin(), points_str.end(), ',', ' ');
+  std::vector<std::pair<double, double>> points_list;
+  std::stringstream ss(points_str);
+  double px = 0, py = 0;
+  while (ss >> px >> py) points_list.push_back({px, py});
+
+  // The hexagon is rebuilt from vertex 0 and the opposite vertex 3. With
+  // fewer points (or zero size) it can't be shown, so don't create an
+  // invisible object at all
+  if (points_list.size() < 4) return nullptr;
+  x = points_list[0].first;
+  y = points_list[0].second;
+  cx = (points_list[0].first + points_list[3].first) / 2.0;
+  cy = (points_list[0].second + points_list[3].second) / 2.0;
+  if (x == cx && y == cy) return nullptr;
 
   auto obj = std::make_unique<Hexagon>(cx, cy, x, y, stroke_width);
   obj->SetFillColor(fill_color);

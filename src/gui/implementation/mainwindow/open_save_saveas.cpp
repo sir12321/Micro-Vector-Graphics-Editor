@@ -1,7 +1,21 @@
+#include <QCloseEvent>
+
 #include "../../headers/mainwindow.h"
+
+// Window close (X) button: close only if saved or discarded, else stay open
+void MainWindow::closeEvent(QCloseEvent *event) {
+  if (MaybeSave()) {
+    event->accept();
+  } else {
+    event->ignore();
+  }
+}
 
 // Returns true if safe to proceed (saved or discarded), false to cancel
 bool MainWindow::MaybeSave() {
+  // No prompt if nothing changed since the last save/open/new
+  if (canvas_->ExportSvg() == saved_svg_) return true;
+
   QMessageBox::StandardButton ret;
   ret = QMessageBox::warning(
       this, "Application",
@@ -25,7 +39,13 @@ bool MainWindow::SaveAs() {
   if (file.isEmpty()) return false;
 
   std::ofstream out(file.toStdString());
-  out << canvas_->ExportSvg();
+  out << canvas_->ExportSvg(true);  // File gets a viewBox fitting all objects
+  out.close();
+  if (!out) {  // Could not open or write (permissions, disk full, ...)
+    QMessageBox::warning(this, "Save failed", "Could not write to " + file);
+    return false;
+  }
+  saved_svg_ = canvas_->ExportSvg();
   current_file_ = file;
   return true;
 }
@@ -37,7 +57,14 @@ bool MainWindow::Save() {
   }
 
   std::ofstream out(current_file_.toStdString());
-  out << canvas_->ExportSvg();
+  out << canvas_->ExportSvg(true);  // File gets a viewBox fitting all objects
+  out.close();
+  if (!out) {  // Could not open or write (permissions, disk full, ...)
+    QMessageBox::warning(this, "Save failed",
+                         "Could not write to " + current_file_);
+    return false;
+  }
+  saved_svg_ = canvas_->ExportSvg();
   return true;
 }
 
@@ -49,6 +76,10 @@ void MainWindow::Open() {
 
     if (!file.isEmpty()) {
       std::ifstream in(file.toStdString());
+      if (!in) {  // Keep the current drawing if the file can't be read
+        QMessageBox::warning(this, "Open failed", "Could not read " + file);
+        return;
+      }
       std::stringstream buffer;
       buffer << in.rdbuf();
 
@@ -56,6 +87,8 @@ void MainWindow::Open() {
       canvas_->ImportSvg(buffer.str());
       canvas_->UndoRedoReset();
       current_file_ = file;
+      saved_svg_ = canvas_->ExportSvg();
+      canvas_->FitToContent();  // Drawing may be anywhere on the canvas
       canvas_->update();
     }
   }
@@ -65,9 +98,12 @@ void MainWindow::Open() {
 void MainWindow::Close() {
   if (MaybeSave()) {
     diagram_.Clear();
+    canvas_->ResetInteraction();  // Selection pointed into the cleared diagram
     canvas_->UndoRedoReset();
     canvas_->update();
     current_file_.clear();
+    saved_svg_ = canvas_->ExportSvg();
+    canvas_->ResetView();  // Start at 100% zoom at the origin
   }
 }
 
@@ -75,8 +111,11 @@ void MainWindow::Close() {
 void MainWindow::New() {
   if (MaybeSave()) {
     diagram_.Clear();
+    canvas_->ResetInteraction();  // Selection pointed into the cleared diagram
     canvas_->UndoRedoReset();
     canvas_->update();
     current_file_.clear();
+    saved_svg_ = canvas_->ExportSvg();
+    canvas_->ResetView();  // Start at 100% zoom at the origin
   }
 }

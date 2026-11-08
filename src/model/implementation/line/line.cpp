@@ -17,7 +17,8 @@ void Line::Draw(QPainter& painter) const {
   pen.setWidth(stroke_width_);
   painter.setPen(pen);
 
-  painter.drawLine(x1_, y1_, x2_, y2_);
+  // QLineF keeps sub-pixel precision when zoomed in
+  painter.drawLine(QLineF(x1_, y1_, x2_, y2_));
 }
 
 // Updates geometry

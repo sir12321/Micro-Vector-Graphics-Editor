@@ -29,8 +29,10 @@ void RoundedRectangle::Draw(QPainter& painter) const {
   pen.setWidth(stroke_width_);
   painter.setPen(pen);
   painter.setBrush(QColor(QString::fromStdString(fill_color_)));
-  painter.drawRoundedRect(cx_ - width_ / 2.0, cy_ - height_ / 2.0, width_,
-                          height_, radius_, radius_);
+  // QRectF keeps sub-pixel precision when zoomed in
+  painter.drawRoundedRect(
+      QRectF(cx_ - width_ / 2.0, cy_ - height_ / 2.0, width_, height_), radius_,
+      radius_);
 }
 void RoundedRectangle::SetGeometry(double x, double y, double w, double h,
                                    double rounded_rect_radius, double end_x,

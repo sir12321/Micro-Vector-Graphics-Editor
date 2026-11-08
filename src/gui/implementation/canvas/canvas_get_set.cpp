@@ -27,7 +27,7 @@ double Canvas::GetRoundedRectRadius() const { return active_rr_radius_; }
 void Canvas::SetRoundedRectRadius(double radius) { active_rr_radius_ = radius; }
 
 // Identify top-most object under a given point
-GraphicsObject* Canvas::GetObjectAt(const QPoint& pos) {
+GraphicsObject* Canvas::GetObjectAt(const QPointF& pos) {
   for (int i = static_cast<int>(diagram_.size()) - 1; i >= 0; --i) {
     auto& obj = diagram_.objects()[i];
     if (IsPointInsideBoundingBox(obj.get(), pos)) {
@@ -44,6 +44,9 @@ void Canvas::SetActiveFontFamily(const QFont& font) {
 
 // Set drawing tool and update mouse cursor
 void Canvas::SetActiveTool(Tool tool) {
+  // Changing tool ends any text edit in progress (like pressing Enter), so
+  // later key presses no longer go into that text
+  FinishTextEditing();
   active_tool_ = tool;
   updateCursor();
 }

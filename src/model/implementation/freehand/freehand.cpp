@@ -17,7 +17,7 @@ Freehand::Freehand() {
 
 // Draws the path
 void Freehand::Draw(QPainter& painter) const {
-  if (points_.size() < 2) return;
+  if (points_.empty()) return;
 
   QPen pen(QColor(QString::fromStdString(stroke_color_)));
   pen.setWidth(stroke_width_);
@@ -26,6 +26,12 @@ void Freehand::Draw(QPainter& painter) const {
 
   painter.setPen(pen);
   painter.setBrush(Qt::NoBrush);
+
+  // A single click is drawn as a round dot (matches how it is saved)
+  if (points_.size() == 1) {
+    painter.drawPoint(points_[0]);
+    return;
+  }
 
   QPainterPath path;
   path.moveTo(points_[0]);
@@ -41,6 +47,7 @@ void Freehand::MoveLast(double x, double y) {
 }
 
 std::pair<double, double> Freehand::GetLast() const {
+  if (points_.empty()) return {last_x_, last_y_};  // Never index an empty list
   return {points_[points_.size() - 1].x(), points_[points_.size() - 1].y()};
 }
 

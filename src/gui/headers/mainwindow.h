@@ -80,6 +80,10 @@ class MainWindow : public QMainWindow {
   void Close();
   void New();
 
+ protected:
+  // Asks to save unsaved changes when the window's close (X) button is used
+  void closeEvent(QCloseEvent *event) override;
+
  private:
   // Helper to check for unsaved changes before closing/opening
   bool MaybeSave();
@@ -88,6 +92,7 @@ class MainWindow : public QMainWindow {
   Diagram diagram_;
   Canvas *canvas_;
   QString current_file_;
+  std::string saved_svg_;  // Diagram as last saved/opened, to detect changes
 
   Tool active_tool_;
 };

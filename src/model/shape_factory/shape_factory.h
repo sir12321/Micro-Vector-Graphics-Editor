@@ -1,7 +1,7 @@
 #ifndef SRC_MODEL_SHAPE_FACTORY_H_
 #define SRC_MODEL_SHAPE_FACTORY_H_
 
-#include <QPoint>
+#include <QPointF>
 #include <algorithm>
 #include <cmath>
 #include <memory>
@@ -16,9 +16,9 @@
 #include "../headers/rounded_rectangle.h"
 #include "../headers/text.h"
 
-// Factory function to create shape objects
-std::unique_ptr<GraphicsObject> CreateShape(Tool tool, const QPoint& start,
-                                            const QPoint& end,
+// Factory function to create shape objects (start/end in world coordinates)
+std::unique_ptr<GraphicsObject> CreateShape(Tool tool, const QPointF& start,
+                                            const QPointF& end,
                                             const std::string& fill_color,
                                             const std::string& stroke_color,
                                             int stroke_width,

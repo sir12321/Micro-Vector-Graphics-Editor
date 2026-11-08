@@ -9,6 +9,7 @@ A lightweight vector graphics editor built with C++17 and the Qt5 framework. Thi
   - Rectangles & Rounded Rectangles (with adjustable corner radius)
   - Hexagons
   - Lines
+- **Infinite Canvas**: The drawing area has no edges. Pan in any direction and zoom from 5% to 4000% (see [Canvas Navigation](#canvas-navigation)).
 - **Freehand Drawing**: Sketch freely on the canvas.
 - **Text Support**: Add text annotations with font family and size customization. Double-click to edit existing text.
 - **Object Manipulation**:
@@ -108,8 +109,21 @@ The source code is organized as follows:
 
 - **Toolbar**: Select tools (Shapes, Freehand, Text) from the toolbar.
 - **Color Selection**: Use the color swatches or entering color codes to change Fill/Stroke.
-- **Canvas**: Click and drag on the white canvas area to draw shapes.
+- **Canvas**: Click and drag on the canvas to draw shapes.
 - **File Menu**: precise control over New, Open, Save, and Save As operations.
+
+### Canvas Navigation
+
+| Action | Mouse / Touchpad | Keyboard |
+|---|---|---|
+| Pan | Drag with the middle or right mouse button, or scroll (two-finger scroll on a touchpad) | – |
+| Pan sideways (mouse) | Shift + scroll | – |
+| Zoom in / out at the cursor | Ctrl + scroll | Ctrl + `+` / Ctrl + `-` (zooms at the canvas centre) |
+| Reset view (100%, original position) | – | Ctrl + `0` |
+
+- Zoom ranges from 5% to 4000%. Selection handles and click areas stay the same size on screen at every zoom level.
+- **New** and **Close** reset the view. **Open** shows the whole drawing, zooming out if it doesn't fit.
+- Saved SVG files include a `viewBox` covering every shape, so drawings placed anywhere on the canvas (including negative coordinates) display fully in other SVG viewers.
 
 ## Authors
 

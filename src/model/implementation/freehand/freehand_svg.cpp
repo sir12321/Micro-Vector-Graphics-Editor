@@ -1,17 +1,23 @@
 #include <QColor>
 #include <QPainterPath>
 #include <QPen>
+#include <cctype>
 #include <sstream>
 
 #include "../../headers/freehand.h"
 
 // Exports to SVG
 std::string Freehand::ToSvg() const {
-  if (points_.size() < 2) return "";
+  if (points_.empty()) return "";
 
   // Start path
   std::string d = "M " + std::to_string(points_[0].x()) + " " +
                   std::to_string(points_[0].y());
+  // Single point (a dot): repeat it so the path renders as a round dot
+  if (points_.size() == 1) {
+    d += " L " + std::to_string(points_[0].x()) + " " +
+         std::to_string(points_[0].y());
+  }
   // Line to subsequent points
   for (std::size_t i = 1; i < points_.size(); ++i) {
     d += " L " + std::to_string(points_[i].x()) + " " +
@@ -64,7 +70,11 @@ std::unique_ptr<GraphicsObject> Freehand::FromSvg(const std::string& svg) {
   if (!(val = get_attr_freehand(svg, "stroke")).empty()) stroke_color = val;
 
   // Parse path data - find d="..." and extract everything between quotes
+  // d=" must start an attribute (preceded by whitespace), so id="..." is skipped
   std::size_t d_pos = svg.find("d=\"");
+  while (d_pos != std::string::npos &&
+         (d_pos == 0 || !std::isspace(svg[d_pos - 1])))
+    d_pos = svg.find("d=\"", d_pos + 1);
   if (d_pos != std::string::npos) {
     std::size_t d_start = d_pos + 3;
     std::size_t d_end = svg.find("\"", d_start);
@@ -83,6 +93,10 @@ std::unique_ptr<GraphicsObject> Freehand::FromSvg(const std::string& svg) {
       }
     }
   }
+
+  // No readable points (e.g. unsupported path syntax): don't create an empty,
+  // invisible object
+  if (points.empty()) return nullptr;
 
   auto obj = std::make_unique<Freehand>();
   obj->set_points(points);

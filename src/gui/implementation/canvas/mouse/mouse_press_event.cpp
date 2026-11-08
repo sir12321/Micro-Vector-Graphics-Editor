@@ -2,9 +2,21 @@
 
 // Handles tools usage (creation, selection, filling) on mouse press
 void Canvas::mousePressEvent(QMouseEvent* event) {
-  if (event->button() != Qt::LeftButton) {
+  // Middle or right drag pans the infinite canvas
+  if (event->button() == Qt::MiddleButton ||
+      event->button() == Qt::RightButton) {
+    is_panning_ = true;
+    pan_last_ = event->localPos();
+    updateCursor();
     return;
   }
+  if (event->button() != Qt::LeftButton || is_panning_) {
+    return;
+  }
+  // Mouse position in world (diagram) coordinates
+  const QPointF pos = ToWorld(event->localPos());
+  // A click ends any double-click text edit; if nothing was typed, no undo
+  text_undo_state_.clear();
   // Deselect if tool is active to avoid conflict
   if (selected_object_ != nullptr && active_tool_ != Tool::None) {
     selected_object_ = nullptr;
@@ -34,6 +46,7 @@ void Canvas::mousePressEvent(QMouseEvent* event) {
       update();
     }
   }
+  RemoveEmptyTexts();  // Discard any text that was committed with no content
 
   // SHAPE CREATION MODE
   // freehand tool
@@ -44,7 +57,7 @@ void Canvas::mousePressEvent(QMouseEvent* event) {
     fh->SetStrokeColor(active_stroke_color_);
     fh->SetStrokeWidth(active_stroke_width_);
 
-    fh->AddPoint(event->pos());
+    fh->AddPoint(pos);
 
     current_freehand_ = fh.get();
     diagram_.AddObject(std::move(fh));
@@ -68,7 +81,7 @@ void Canvas::mousePressEvent(QMouseEvent* event) {
     }
 
     auto text =
-        std::make_unique<TextObject>(event->pos().x(), event->pos().y(), "",
+        std::make_unique<TextObject>(pos.x(), pos.y(), "",
                                      active_font_size_, active_font_family_);
 
     editing_text_ = text.get();
@@ -85,10 +98,11 @@ void Canvas::mousePressEvent(QMouseEvent* event) {
   // Standard shape creation (rect, circle, line etc)
   if (active_tool_ != Tool::None && active_tool_ != Tool::Fill &&
       active_tool_ != Tool::StrokeFill && event->button() == Qt::LeftButton) {
-    PushUndoState();
-    drag_start_ = event->pos();
-    create_start_ = event->pos();
-    QPoint end = event->pos();
+    // Snapshot only; recorded on release if the new shape has a real size
+    pending_undo_state_ = diagram_.ToSvg();
+    drag_start_ = pos;
+    create_start_ = pos;
+    QPointF end = pos;
     auto obj = CreateShape(active_tool_, drag_start_, end, active_fill_color_,
                            active_stroke_color_, active_stroke_width_,
                            GetRoundedRectRadius(), GetTextFontSize());
@@ -108,20 +122,23 @@ void Canvas::mousePressEvent(QMouseEvent* event) {
       is_typing_text_ = false;
       editing_text_->SetEditing(false);
       editing_text_ = nullptr;
+      RemoveEmptyTexts();
       update();
     }
     GraphicsObject* obj = nullptr;
     for (int i = static_cast<int>(diagram_.size()) - 1; i >= 0; --i) {
       auto& object = diagram_.objects()[i];
-      if (IsPointInsideBoundingBox(object.get(), event->pos()) &&
+      if (IsPointInsideBoundingBox(object.get(), pos) &&
           object->GetId() != "freehand" && object->GetId() != "line") {
         obj = object.get();
         break;
       }
     }
     if (!obj) return;
-    PushUndoState();
+    // Record undo only if the colour actually changes (keeps redo otherwise)
+    std::string before = diagram_.ToSvg();
     obj->SetFillColor(active_fill_color_);
+    if (diagram_.ToSvg() != before) PushUndoSnapshot(before);
 
     update();
     return;
@@ -132,13 +149,16 @@ void Canvas::mousePressEvent(QMouseEvent* event) {
       is_typing_text_ = false;
       editing_text_->SetEditing(false);
       editing_text_ = nullptr;
+      RemoveEmptyTexts();
       update();
     }
-    GraphicsObject* obj = GetObjectAt(event->pos());
+    GraphicsObject* obj = GetObjectAt(pos);
     if (!obj) return;
-    PushUndoState();
+    // Record undo only if colour/width actually change (keeps redo otherwise)
+    std::string before = diagram_.ToSvg();
     obj->SetStrokeColor(active_stroke_color_);
     obj->SetStrokeWidth(active_stroke_width_);
+    if (diagram_.ToSvg() != before) PushUndoSnapshot(before);
     update();
     return;
   }
@@ -146,23 +166,24 @@ void Canvas::mousePressEvent(QMouseEvent* event) {
   // SELECTION MODE
   selected_object_ = nullptr;
   dragging_object_ = nullptr;
-  PushUndoState();
+  // Snapshot only; pushed on release if the diagram actually changed
+  pending_undo_state_ = diagram_.ToSvg();
 
   // Hit test for selection and resize handles
-  selected_object_ = GetObjectAt(event->pos());
-  dragging_object_ = GetObjectAt(event->pos());
+  selected_object_ = GetObjectAt(pos);
+  dragging_object_ = GetObjectAt(pos);
 
   if (selected_object_) {
-    if (IsPointInsideResizeStart(selected_object_, event->pos())) {
+    if (IsPointInsideResizeStart(selected_object_, pos)) {
       is_resize1_ = true;
-    } else if (IsPointInsideResizeEnd(selected_object_, event->pos())) {
+    } else if (IsPointInsideResizeEnd(selected_object_, pos)) {
       is_resize2_ = true;
-    } else if (IsPointInsideLast(selected_object_, event->pos())) {
+    } else if (IsPointInsideLast(selected_object_, pos)) {
       is_resize_3_ = true;
     }
   }
 
-  last_mouse_pos_ = event->pos();
+  last_mouse_pos_ = pos;
   update();
   updateCursor();
 }

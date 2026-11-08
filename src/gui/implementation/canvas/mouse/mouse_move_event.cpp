@@ -2,33 +2,43 @@
 
 // Handles mouse movement for resizing, creating, and moving objects
 void Canvas::mouseMoveEvent(QMouseEvent* event) {
+  // Panning: shift the view by the screen distance moved
+  if (is_panning_) {
+    pan_ += event->localPos() - pan_last_;
+    pan_last_ = event->localPos();
+    update();
+    return;
+  }
+  // Mouse position in world (diagram) coordinates
+  const QPointF pos = ToWorld(event->localPos());
+
   // Handle resizing via control points
   if (is_resize1_ && selected_object_) {
-    selected_object_->MoveStart(event->pos().x(), event->pos().y());
+    selected_object_->MoveStart(pos.x(), pos.y());
     update();
     return;
   }
   if (is_resize2_ && selected_object_) {
-    selected_object_->MoveEnd(event->pos().x(), event->pos().y());
+    selected_object_->MoveEnd(pos.x(), pos.y());
     update();
     return;
   }
   if (is_resize_3_ && selected_object_) {
-    selected_object_->MoveLast(event->pos().x(), event->pos().y());
+    selected_object_->MoveLast(pos.x(), pos.y());
     update();
     return;
   }
 
   // Handle freehand drawing path updates
   if (is_drawing_freehand_ && current_freehand_) {
-    current_freehand_->AddPoint(event->pos());
+    current_freehand_->AddPoint(pos);
     update();
     return;
   }
 
   // Update preview object geometry during creation
   if (is_creating_ && preview_object_) {
-    QPoint end = event->pos();
+    QPointF end = pos;
     double x, y, w, h;
 
     if (active_tool_ == Tool::Rectangle ||
@@ -61,9 +71,9 @@ void Canvas::mouseMoveEvent(QMouseEvent* event) {
     }
 
     if (object_exists) {
-      QPoint delta = event->pos() - last_mouse_pos_;
+      QPointF delta = pos - last_mouse_pos_;
       dragging_object_->Move(delta.x(), delta.y());
-      last_mouse_pos_ = event->pos();
+      last_mouse_pos_ = pos;
       update();
     } else {
       dragging_object_ = nullptr;

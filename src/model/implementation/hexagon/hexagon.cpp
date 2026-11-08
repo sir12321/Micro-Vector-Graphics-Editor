@@ -1,5 +1,11 @@
 #include "../../headers/hexagon.h"
 
+namespace {
+// Pi as a standard C++ constant (M_PI is non-standard and is missing on
+// MSVC unless _USE_MATH_DEFINES is set)
+constexpr double kPi = 3.14159265358979323846;
+}  // namespace
+
 // Constructor
 Hexagon::Hexagon(double cx, double cy, double x, double y, int stroke_width)
     : cx_(cx), cy_(cy), x_(x), y_(y) {
@@ -24,7 +30,7 @@ void Hexagon::Draw(QPainter& painter) const {
   double vx = x_ - cx_;
   double vy = y_ - cy_;
   for (int i = 0; i < 6; ++i) {
-    double angle = i * M_PI / 3.0;
+    double angle = i * kPi / 3.0;
     // Rotate the generating vertex around the center
     double rx = vx * std::cos(angle) - vy * std::sin(angle);
     double ry = vx * std::sin(angle) + vy * std::cos(angle);

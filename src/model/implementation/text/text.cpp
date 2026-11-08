@@ -19,12 +19,19 @@ TextObject::TextObject(double x, double y, const std::string& text,
 // Appends character
 void TextObject::AppendChar(char c) { text_ += c; }
 
-// Removes last character
+// Removes last character (a whole UTF-8 character, which may be 1-4 bytes)
 void TextObject::Backspace() {
+  // Drop UTF-8 continuation bytes (10xxxxxx), then the lead byte
+  while (!text_.empty() && (text_.back() & 0xC0) == 0x80) {
+    text_.pop_back();
+  }
   if (!text_.empty()) {
     text_.pop_back();
   }
 }
+
+// Returns true if the text has no characters
+bool TextObject::IsEmpty() const { return text_.empty(); }
 
 void TextObject::SetText(const std::string& text) { text_ = text; }
 
@@ -49,24 +56,29 @@ void TextObject::Draw(QPainter& painter) const {
 
   painter.setBrush(QColor(QString::fromStdString(fill_color_)));
   painter.setPen(QColor(QString::fromStdString(fill_color_)));
-  painter.drawRect(bbox_x_ + pad, bbox_y_ + pad, text_width + pad * 2,
-                   text_height + pad * 2);
+  // Float geometry (QRectF/QLineF) keeps the box aligned when zoomed in
+  painter.drawRect(QRectF(bbox_x_ + pad, bbox_y_ + pad, text_width + pad * 2,
+                          text_height + pad * 2));
 
   painter.setPen(QColor(QString::fromStdString(stroke_color_)));
   painter.drawText(QPointF(bbox_x_ + 2 * pad, bbox_y_ + 2 * pad + fm.ascent()),
                    QString::fromStdString(text_));
 
   if (show_cursor_) {
-    int cursor_x = bbox_x_ + 2 * pad + text_width;
-    int top = bbox_y_ + 2 * pad;
-    int bottom = top + text_height;
-    painter.setPen(Qt::black);
-    painter.drawLine(cursor_x, top, cursor_x, bottom);
+    double cursor_x = bbox_x_ + 2 * pad + text_width;
+    double top = bbox_y_ + 2 * pad;
+    double bottom = top + text_height;
+    // Cosmetic pens: editing cursor and box stay 1px thick at any zoom
+    QPen cursor_pen(Qt::black);
+    cursor_pen.setCosmetic(true);
+    painter.setPen(cursor_pen);
+    painter.drawLine(QLineF(cursor_x, top, cursor_x, bottom));
     QPen box_pen(Qt::blue);
     box_pen.setStyle(Qt::DashLine);
+    box_pen.setCosmetic(true);
     painter.setPen(box_pen);
     painter.setBrush(Qt::NoBrush);
-    painter.drawRect(bbox_x_, bbox_y_, bbox_width_, bbox_height_);
+    painter.drawRect(QRectF(bbox_x_, bbox_y_, bbox_width_, bbox_height_));
   }
 }
 

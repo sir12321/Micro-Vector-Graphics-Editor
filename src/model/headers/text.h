@@ -10,19 +10,22 @@ class TextObject : public GraphicsObject {
   double y_;                 // Y coordinate of text origin
   std::string text_;         // The string content
   int font_size_;            // Font size in points
-  std::string font_family_;  // Font family name (default "Deja Vu Sans")
+  std::string font_family_;  // Font family name (default "DejaVu Sans")
   bool show_cursor_;         // Whether to draw the editing cursor
 
  public:
   // Constructs a Text object
   TextObject(double x, double y, const std::string& text, int font_size,
-             const std::string& font_family = "Deja Vu Sans");
+             const std::string& font_family = "DejaVu Sans");
 
   // Appends character
   void AppendChar(char c);
 
   // Removes last character
   void Backspace();
+
+  // Returns true if the text has no characters
+  bool IsEmpty() const;
 
   // Replaces text content
   void SetText(const std::string& text);
